@@ -1,0 +1,273 @@
+# The first version of the Premble.org. (DEPRECATED, left for backward compatibility purposes)
+
+# #345678901###1####01###2####01###3####01###4####01###5####01###6####01######79
+
+#+AUTHOR: MB
+
+#+LATEX_HEADER:\usepackage{hyperref} 
+#+LATEX_HEADER:\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue}
+
+#+LATEX_HEADER:\usepackage[a4paper,left=1.5cm,right=2cm,top=2cm,bottom=3.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 
+
+
+# #+LATEX_HEADER:\usepackage{hyphenat}
+#+LATEX_HEADER:\usepackage{babel}
+#+LATEX_HEADER:\usepackage{polski}
+#+LATEX_HEADER:\sloppy               % make hyphenation a bit easier for latex
+
+# #+LATEX_HEADER: \usepackage[most]{tcolorbox} 
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsthm}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# ############ Full-stop after (sub)section title
+# ## HTML
+#+HTML_HEAD_EXTRA: <style>span[class^="section-number-"]:after { content: '.'; }</style>
+# ## LaTeX
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX_HEADER: \titlelabel{\thetitle.\quad}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# #+LaTeX_HEADER: \usepackage{xcolor}
+# #+LaTeX_HEADER: \usepackage{framed}
+# #+LaTeX_HEADER: \definecolor{shadecolor}{gray}{.95}
+# #+LaTeX_HEADER: \renewcommand{\emph}{\textit}
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# Colored background in latex environments:
+# https://tex.stackexchange.com/questions/547979/problem-numbering-environment
+
+# #+LaTeX_HEADER: % new theorem "definition", this defines new counter "definition"
+# #+LaTeX_HEADER: \theoremstyle{example}           
+# #+LaTeX_HEADER: \newtheorem{example}{Example}[section]
+
+# #+LaTeX_HEADER: \usepackage{cleveref}
+# #+LaTeX_HEADER: \newtcbtheorem[auto counter, number within = section,
+# #+LaTeX_HEADER:   crefname={example}{Example},
+# #+LaTeX_HEADER:   Crefname={Example}{Example} ]
+# #+LaTeX_HEADER: {Example}{Exam\smash{p}le}{%
+# #+LaTeX_HEADER:   breakable,
+# #+LaTeX_HEADER:   fonttitle = \bfseries,
+# #+LaTeX_HEADER:   colframe = blue!75!black,
+# #+LaTeX_HEADER:   colback = blue!10
+# #+LaTeX_HEADER: }{exa}
+
+# ############################################
+# https://tex.stackexchange.com/questions/611875/newtcbtheorem-with-3-entries-1-2-3
+
+#+LATEX_HEADER: \usepackage[svgnames,x11names]{xcolor}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage[notextcomp]{stix}
+#+LATEX_HEADER: \usepackage[most]{tcolorbox}
+#+LATEX_HEADER: \tcbuselibrary{theorems}
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \tcbset{
+#+LATEX_HEADER:     golden/.style={
+#+LATEX_HEADER:         nobeforeafter, tcbox raise base, enhanced, boxrule=0pt, 
+#+LATEX_HEADER:         interior style={top color=Gold1!10!white, bottom color=Gold1!10!white, middle color=Gold1!50!yellow},
+#+LATEX_HEADER:         colframe=red, fuzzy halo=1pt with Gold1, description color = black, coltitle=black, fonttitle=\bfseries, separator sign={\ ---}
+#+LATEX_HEADER:     }
+#+LATEX_HEADER: }
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbexample}{Przykład}{golden}{th}
+#+LATEX_HEADER: 
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# #+LATEX_HEADER:\usepackage{tcolorbox}   % in order to have org-special-blocks-extras working
+
+# #+LATEX_HEADER:\definecolor{my-c}{cmyk}   {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER:\definecolor{my-olive}{cmyk} {0.10, 0.00, 0.34, 0.26, 1.00}
+#+LATEX_HEADER:\definecolor{my-salmon}{cmyk}{0.00, 0.31, 0.10, 0.16, 1.00}
+#+LATEX_HEADER:\definecolor{my-sand}{cmyk}  {0.00, 0.07, 0.39, 0.05, 1.00}
+#+LATEX_HEADER:\definecolor{my-steel}{cmyk} {0.23, 0.08, 0.00, 0.26, 1.00}
+#+LATEX_HEADER:\definecolor{my-sky}{cmyk}  {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER:\definecolor{my-gray}{cmyk}  {0.20, 0.20, 0.20, 0.20, 1.00}
+
+# ############ FORMATOWANIE BLOKÓW KODU I BLOKÓW Z WYNIKAMI
+# 1. Formatowanie kodów przy pomocy minted (jak na razie nie działa)
+# #+LaTeX_HEADER: \usepackage{minted} # This is added by default by Emacs exporter
+# #+LaTeX_HEADER: \newenvironment{resultsminted}{{\begin{minted}[,frame=single]}{\end{minted}}}}
+
+#+LaTeX_HEADER: \usepackage{color}
+#+LaTeX_HEADER: \definecolor{my-mint}{cmyk}  {0.20, 0.00, 0.16, 0.06, 1.00}
+#+LaTeX_HEADER: \newenvironment{resultsminted}
+#+LaTeX_HEADER: {\VerbatimEnvironment
+#+LaTeX_HEADER: \begin{minted}[
+#+LaTeX_HEADER: % linenos,
+#+LaTeX_HEADER: % fontfamily=courier,
+#+LaTeX_HEADER: % fontsize=\scriptsize,
+#+LaTeX_HEADER: % xleftmargin=21pt,
+#+LaTeX_HEADER: bgcolor=my-mint,
+#+LaTeX_HEADER: frame=single
+#+LaTeX_HEADER: ]{text}}
+#+LaTeX_HEADER: {\end{minted}}
+
+#+LaTeX_HEADER: \renewenvironment{resultsminted}
+#+LaTeX_HEADER: {\VerbatimEnvironment
+#+LaTeX_HEADER: \begin{minted}[
+#+LaTeX_HEADER: % linenos,
+#+LaTeX_HEADER: % fontfamily=courier,
+#+LaTeX_HEADER: % fontsize=\scriptsize,
+#+LaTeX_HEADER: % xleftmargin=21pt,
+#+LaTeX_HEADER: bgcolor=my-mint,
+#+LaTeX_HEADER: frame=single
+#+LaTeX_HEADER: ]{text}}
+#+LaTeX_HEADER: {\end{minted}}
+
+#+LaTeX_HEADER: \usemintedstyle{emacs}
+
+
+
+# #+ATTR_LATEX: :options frame=single
+ 
+# 2. Formatowanie kodów przy pomocy lstlistings
+# #+LaTeX_HEADER: \usepackage{listings}
+# #+LaTeX_HEADER: \lstnewenvironment{common-lispcode}
+# #+LaTeX_HEADER: {\lstset{language={Lisp},basicstyle={\ttfamily\footnotesize},frame=single,breaklines=true}}
+# #+LaTeX_HEADER: {}
+# #+LaTeX_HEADER: \newcommand{\python}[1]{\lstset{language={Python},basicstyle={\ttfamily\small}}\lstinline{#1}}
+ 
+
+
+
+# # #+LaTeX_HEADER: \newenvironment{resultsblock}{\begin{shaded}}{\end{shaded}} 
+
+# # TO PONIZEJ NIE DZIALA
+# # #+LaTeX_HEADER: \lstnewenvironment{resultsblock}[1][]{
+# # #+LaTeX_HEADER:                   \lstset{frame=lines,
+# # #+LaTeX_HEADER:                           basicstyle=\footnotesize,
+# # #+LaTeX_HEADER:                           numbers=left,
+# # #+LaTeX_HEADER:                           numberstyle=\tiny,
+# # #+LaTeX_HEADER:                           language= ,
+# # #+LaTeX_HEADER:                           label= ,
+# # #+LaTeX_HEADER:                           caption= ,
+# # #+LaTeX_HEADER:                           captionpos=b
+# # #+LaTeX_HEADER:                           #1}
+# # #+LaTeX_HEADER:                     }
+# # #+LaTeX_HEADER: 
+
+# #+LaTeX_HEADER: \lstnewenvironment{resultsblock}{\lstset{language=bash,backgroundcolor = \color{lightgray}}}{}
+
+
+# # TO SAMO TRZEBA ZROBIC DLA HTMLa, MARKDOWN'a itd itp
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#    Math Latex commands
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#+LATEX_HEADER: \newcommand{\intab}{\int_{x_a}^{x_b}}
+#+LATEX_HEADER: \newcommand{\dotp}[1]{\langle #1 \rangle}
+
+#+LATEX_HEADER: \newcommand{\dif}{\mathrm{d} }
+#+LATEX_HEADER: \newcommand{\dx}{\mathrm{d} x}
+#+LATEX_HEADER: \newcommand{\dy}{\mathrm{d} y}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# my own macros
+
+
+# # Default settings for macros based on org-special-block
+
+#+SETUPFILE: ~/.emacs.d/myarch/lang_pl.org
+# #+INCLUDE: ~/.emacs.d/myarch/colscheme_bw.org
+#+SETUPFILE: ~/.emacs.d/myarch/colscheme_col.org
+
+
+#+MACRO: begin_box  #+begin_box :background-color white :shadow black
+#+MACRO: end_box    #+end_box 
+
+# #+MACRO: begin_warning  #+begin_box {{{warning_box_caption}}} $1 :background-color {{{warning_box_col}}} 
+# #+MACRO: end_warning    #+end_box 
+
+# #+MACRO: begin_remark  #+begin_box {{{remark_box_caption}}} $1 :background-color {{{remark_box_col}}}
+# #+MACRO: end_remark    #+end_box 
+
+# #+MACRO: begin_question  #+begin_box {{{question_box_caption}}} $1 :background-color {{{question_box_col}}}  
+# #+MACRO: end_question    #+end_box 
+
+# #+MACRO: begin_summary  #+begin_box {{{summary_box_caption}}} $1 :background-color {{{summary_box_col}}}
+# #+MACRO: end_summary    #+end_box 
+
+# #+MACRO: begin_hint  #+begin_box {{{hint_box_caption}}} $1 :background-color {{{hint_box_col}}}
+# #+MACRO: end_hint    #+end_box 
+
+# #+MACRO: begin_resume  #+begin_box {{{resume_box_caption}}} $1 :background-color {{{resume_box_col}}}
+# #+MACRO: end_resume    #+end_box 
+
+# #+MACRO: begin_results  #+begin_box {{{results_box_caption}}} $1 :background-color {{{results_box_col}}}
+# #+MACRO: end_results    #+end_box
+
+# #+MACRO: begin_example  #+begin_box {{{example_box_caption}}} $1 :background-color {{{example_box_col}}}
+# #+MACRO: end_example    #+end_box 
+
+
+
+#+MACRO: begin_warning  #+begin_cbox {{{warning_box_caption}}} $1 :background-color {{{warning_box_col}}} 
+#+MACRO: end_warning    #+end_cbox 
+
+#+MACRO: begin_remark  #+begin_cbox {{{remark_box_caption}}} $1 :background-color {{{remark_box_col}}}
+#+MACRO: end_remark    #+end_cbox 
+
+#+MACRO: begin_observation  #+begin_cbox {{{observation_box_caption}}} $1 :background-color {{{observation_box_col}}}
+#+MACRO: end_observation    #+end_cbox 
+
+#+MACRO: begin_question  #+begin_cbox {{{question_box_caption}}} $1 :background-color {{{question_box_col}}}  
+#+MACRO: end_question    #+end_cbox 
+
+#+MACRO: begin_summary  #+begin_cbox {{{summary_box_caption}}} $1 :background-color {{{summary_box_col}}}
+#+MACRO: end_summary    #+end_cbox 
+
+#+MACRO: begin_hint  #+begin_cbox {{{hint_box_caption}}} $1 :background-color {{{hint_box_col}}}
+#+MACRO: end_hint    #+end_cbox 
+
+#+MACRO: begin_resume  #+begin_cbox {{{resume_box_caption}}} $1 :background-color {{{resume_box_col}}}
+#+MACRO: end_resume    #+end_cbox 
+
+#+MACRO: begin_results  #+begin_cbox {{{results_box_caption}}} $1 :background-color {{{results_box_col}}}
+#+MACRO: end_results    #+end_cbox
+
+#+MACRO: begin_definition  #+begin_cbox {{{definition_box_caption}}} $1 :background-color {{{definition_box_col}}}
+#+MACRO: end_definition    #+end_cbox
+
+#+MACRO: begin_task  #+begin_cbox {{{task_box_caption}}} $1 :background-color {{{task_box_col}}}
+#+MACRO: end_task    #+end_cbox
+
+#+MACRO: begin_problem  #+begin_cbox {{{problem_box_caption}}} $1 :background-color {{{problem_box_col}}}
+#+MACRO: end_problem    #+end_cbox
+
+#+MACRO: begin_conclusion  #+begin_cbox {{{conclusion_box_caption}}} $1 :background-color {{{conclusion_box_col}}}
+#+MACRO: end_conclusion    #+end_cbox
+
+# #+MACRO: begin_example  #+begin_cbox {{{example_box_caption}}} $1 :background-color {{{example_box_col}}}
+# #+MACRO: end_example    #+end_cbox 
+
+#+MACRO: begin_example  @@latex:\begin{mbexample}{$1}{$2}@@
+#+MACRO: end_example    @@latex:\end{mbexample}@@
+
+# #+MACRO: begin_example  #+begin_ex
+# #+MACRO: end_example    #+end_ex
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#    OLD EXPERIMENTS
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# # Latex Class with environments defined in org-macros.setup (LATEX)
+# #+LATEX_HEADER:\usepackage{Preamble_latex}  
+
+# # CSS Class with environments defined in org-macros.setup (HTML)
+# # TODO
+
+# # markdown class with environments defined in org-macros.setup (MD) ... etc..
+# # TODO
+
+# #+INCLUDE: org-macros.setup
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+

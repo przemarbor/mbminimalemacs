@@ -1,0 +1,18 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# my own macros
+
+#+MACRO: warning_box_col     my-salmon
+#+MACRO: remark_box_col      my-salmon
+#+MACRO: todo_box_col        red
+#+MACRO: observation_box_col my-olive
+#+MACRO: question_box_col    my-steel
+#+MACRO: summary_box_col     my-sky
+#+MACRO: hint_box_col        my-sand
+#+MACRO: resume_box_col      my-sand
+#+MACRO: results_box_col     white
+#+MACRO: example_box_col     my-olive
+#+MACRO: definition_box_col  my-steel
+#+MACRO: task_box_col        my-steel
+#+MACRO: problem_box_col     my-steel
+#+MACRO: conclusion_box_col  my-steel
+#+MACRO: solution_box_col    white

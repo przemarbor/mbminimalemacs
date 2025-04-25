@@ -1,0 +1,175 @@
+# Next generation of preamble org.
+
+#+AUTHOR: MB
+
+#+LATEX_HEADER:\usepackage{hyperref} 
+#+LATEX_HEADER:\usepackage[a4paper,left=1.5cm,right=2cm,top=2cm,bottom=3.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 
+
+#+LATEX_HEADER:\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue}
+
+# #+LATEX_HEADER:\usepackage{hyphenat}
+#+LATEX_HEADER:\usepackage{babel}
+#+LATEX_HEADER:\usepackage{polski}
+#+LATEX_HEADER:\sloppy               % make hyphenation a bit easier for latex
+
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsthm}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# ############ Full-stop after (sub)section title
+# ## HTML
+#+HTML_HEAD_EXTRA: <style>span[class^="section-number-"]:after { content: '.'; }</style>
+# ## LaTeX
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX_HEADER: \titlelabel{\thetitle.\quad}
+
+# # Default settings for macros based on org-special-block
+# ############################# #+SETUPFILE: ./lang_pl.org
+# #############################  #+INCLUDE: /myarch/colscheme_bw.org
+# ############################# #+SETUPFILE: ./colscheme_col.org
+
+#+LATEX_HEADER: \usepackage[svgnames,x11names]{xcolor}
+
+#+LATEX_HEADER: \definecolor{my-olive}{cmyk} {0.10, 0.00, 0.34, 0.26, 1.00}
+#+LATEX_HEADER: \definecolor{my-salmon}{cmyk}{0.00, 0.31, 0.10, 0.16, 1.00}
+#+LATEX_HEADER: \definecolor{my-sand}{cmyk}  {0.00, 0.07, 0.39, 0.05, 1.00}
+#+LATEX_HEADER: \definecolor{my-steel}{cmyk} {0.23, 0.08, 0.00, 0.26, 1.00}
+#+LATEX_HEADER: \definecolor{my-sky}{cmyk}   {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER: \definecolor{my-gray}{cmyk}  {0.20, 0.20, 0.20, 0.20, 1.00}
+
+
+
+#+SETUPFILE: ~/.emacs.d/myarch/Preamble2023_07/colscheme_col_tex.org
+#+SETUPFILE: ~/.emacs.d/myarch/Preamble2023_07/lang_pl_tex.org
+
+# ############################################
+# https://tex.stackexchange.com/questions/611875/newtcbtheorem-with-3-entries-1-2-3
+
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage[notextcomp]{stix}
+#+LATEX_HEADER: \usepackage[most]{tcolorbox}
+#+LATEX_HEADER: \tcbuselibrary{theorems}
+
+#+LATEX_HEADER: \newcommand{\setBox}[2]{
+#+LATEX_HEADER: \tcbset{
+#+LATEX_HEADER: #1/.style={
+#+LATEX_HEADER: nobeforeafter, tcbox raise base, enhanced, boxrule=0pt,
+#+LATEX_HEADER: interior style={top color=#2!10!white, bottom color=#2!10!white, middle color=#2!50!#2},
+#+LATEX_HEADER: colframe=#2, fuzzy halo=1pt with #2, description color = black, coltitle=black, fonttitle=\bfseries, separator sign={\ ---}, before=\par\medskip\noindent
+#+LATEX_HEADER: }}}
+
+#+LATEX_HEADER: \setBox{tc_warning}{\warningBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbwarning}{\warningBoxCaption}{tc_warning}{th}
+#+LATEX_HEADER: \setBox{tc_remark}{\remarkBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbremark}{\remarkBoxCaption}{tc_remark}{th}
+
+#+LATEX_HEADER: \setBox{tc_problem}{\problemBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbproblem}{\problemBoxCaption}{tc_problem}{th}
+#+LATEX_HEADER: \setBox{tc_question}{\questionBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbquestion}{\questionBoxCaption}{tc_question}{th}
+#+LATEX_HEADER: \setBox{tc_answer}{\answerBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbanswer}{\answerBoxCaption}{tc_answer}{th}
+#+LATEX_HEADER: \setBox{tc_task}{\taskBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbtask}{\taskBoxCaption}{tc_task}{th}
+#+LATEX_HEADER: \setBox{tc_solution}{\solutionBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbsolution}{\solutionBoxCaption}{tc_solution}{th}
+
+
+#+LATEX_HEADER: \setBox{tc_hint}{\hintBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbhint}{\hintBoxCaption}{tc_hint}{th}
+#+LATEX_HEADER: \setBox{tc_resume}{\resumeBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbresume}{\resumeBoxCaption}{tc_resume}{th}
+#+LATEX_HEADER: \setBox{tc_results}{\resultsBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbresults}{\resultsBoxCaption}{tc_results}{th}
+
+#+LATEX_HEADER: \setBox{tc_observation}{\observationBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbobservation}{\observationBoxCaption}{tc_observation}{th}
+#+LATEX_HEADER: \setBox{tc_conclusion}{\conclusionBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbconclusion}{\conclusionBoxCaption}{tc_conclusion}{th}
+#+LATEX_HEADER: \setBox{tc_summary}{\summaryBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbsummary}{\summaryBoxCaption}{tc_summary}{th}
+
+#+LATEX_HEADER: \setBox{tc_definition}{\definitionBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbdefinition}{\definitionBoxCaption}{tc_definition}{th}
+
+#+LATEX_HEADER: \setBox{tc_example}{\exampleBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbexample}{\exampleBoxCaption}{tc_example}{th}
+
+#+LATEX_HEADER: \setBox{tc_theorem}{\theoremBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbtheorem}{\theoremBoxCaption}{tc_theorem}{th}
+
+#+LATEX_HEADER: \setBox{tc_lemma}{\lemmaBoxCol}
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mblemma}{\lemmaBoxCaption}{tc_lemma}{th}
+
+#+MACRO: begin_warning  @@latex:\begin{mbwarning}{$1}{$2}@@
+#+MACRO: end_warning    @@latex:\end{mbwarning}@@
+
+#+MACRO: begin_remark  @@latex:\begin{mbremark}{$1}{$2}@@
+#+MACRO: end_remark    @@latex:\end{mbremark}@@
+
+
+#+MACRO: begin_problem  @@latex:\begin{mbproblem}{$1}{$2}@@
+#+MACRO: end_problem    @@latex:\end{mbproblem}@@
+
+#+MACRO: begin_question  @@latex:\begin{mbquestion}{$1}{$2}@@
+#+MACRO: end_question    @@latex:\end{mbquestion}@@
+
+#+MACRO: begin_answer  @@latex:\begin{mbanswer}{$1}{$2}@@
+#+MACRO: end_answer    @@latex:\end{mbanswer}@@
+
+#+MACRO: begin_task  @@latex:\begin{mbtask}{$1}{$2}@@
+#+MACRO: end_task    @@latex:\end{mbtask}@@
+
+#+MACRO: begin_solution  @@latex:\begin{mbsolution}{$1}{$2}@@
+#+MACRO: end_solution    @@latex:\end{mbsolution}@@
+
+
+#+MACRO: begin_hint  @@latex:\begin{mbhint}{$1}{$2}@@
+#+MACRO: end_hint    @@latex:\end{mbhint}@@
+
+#+MACRO: begin_resume  @@latex:\begin{mbresume}{$1}{$2}@@
+#+MACRO: end_resume    @@latex:\end{mbresume}@@
+
+#+MACRO: begin_results  @@latex:\begin{mbresults}{$1}{$2}@@
+#+MACRO: end_results    @@latex:\end{mbresults}@@
+
+
+#+MACRO: begin_observation  @@latex:\begin{mbobservation}{$1}{$2}@@
+#+MACRO: end_observation    @@latex:\end{mbobservation}@@
+
+#+MACRO: begin_conclusion  @@latex:\begin{mbconclusion}{$1}{$2}@@
+#+MACRO: end_conclusion    @@latex:\end{mbconclusion}@@
+
+#+MACRO: begin_summary  @@latex:\begin{mbsummary}{$1}{$2}@@
+#+MACRO: end_summary    @@latex:\end{mbsummary}@@
+
+
+#+MACRO: begin_definition  @@latex:\begin{mbdefinition}{$1}{$2}@@
+#+MACRO: end_definition    @@latex:\end{mbdefinition}@@
+
+#+MACRO: begin_example  @@latex:\begin{mbexample}{$1}{$2}@@
+#+MACRO: end_example    @@latex:\end{mbexample}@@
+
+#+MACRO: begin_theorem  @@latex:\begin{mbtheorem}{$1}{$2}@@
+#+MACRO: end_theorem    @@latex:\end{mbtheorem}@@
+
+#+MACRO: begin_lemma  @@latex:\begin{mblemma}{$1}{$2}@@
+#+MACRO: end_lemma    @@latex:\end{mblemma}@@
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#    Math Latex commands
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#+LATEX_HEADER: \newcommand{\intab}{\int_{x_a}^{x_b}}
+#+LATEX_HEADER: \newcommand{\dotp}[1]{\langle #1 \rangle}
+
+#+LATEX_HEADER: \newcommand{\dif}{\mathrm{d} }
+#+LATEX_HEADER: \newcommand{\dx}{\mathrm{d} x}
+#+LATEX_HEADER: \newcommand{\dy}{\mathrm{d} y}
+#+LATEX_HEADER: \newcommand{\vc}{\mathbf}
+#+LATEX_HEADER: \newcommand{\odif}[2]{\frac{\dif #1}{\dif #2}}
+#+LATEX_HEADER: \newcommand{\odifn}[3]{\frac{\dif^{#3} #1}{\dif #2^{#3}}}
+#+LATEX_HEADER: \newcommand{\pdif}[2]{\frac{\partial #1}{\partial #2}}
+#+LATEX_HEADER: \newcommand{\pdifn}[3]{\frac{\partial^{#3} #1}{\partial #2^{#3}}}

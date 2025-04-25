@@ -1,0 +1,53 @@
+#+TITLE: README.org
+#+SUBTITLE: Emacs w wersji 30.1
+#+DESCRIPTION: 
+#+AUTHOR: 
+#+DATE: <2025-03-20 Thu>
+#+TAGS: 
+#+OPTIONS: -:nil
+#+TODO: TODO ABANDONED | DEPRECATED DONE
+
+* Spis treści :TOC_4:
+- [[#minimal-emacsd][Minimal .emacs.d]]
+  - [[#stworzenie-repozytorium-od-nowa][Stworzenie repozytorium od nowa]]
+
+* Minimal .emacs.d
+To jest publiczna wersja mojej konfiguracji =.emacs.d= bazująca na repozytorium:
+
+https://github.com/jamescherti/minimal-emacs.d
+
+** Stworzenie repozytorium od nowa
+#+begin_src shell
+cd ~/.emacs.d
+rm -rf .git
+git init
+#+end_src
+
+#+RESULTS:
+: Zainicjowano puste repozytorium Gita w /home/mb/.emacs.d/.git/
+
+Wyeksportuj treść org-file'a z flaga nonprivate
+
+#+begin_src shell
+cd ~/.emacs.d
+git add .
+git commit -m "Piewszy commit"
+#+end_src
+
+Załóż repozytorium na githubie:
+
+#+begin_src shell
+cd ~/.emacs.d
+git remote add origin git@github.com:przemarbor/mbminimalemacs.git
+git branch -M main
+git push -u origin main
+#+end_src
+
+#+RESULTS:
+: branch 'main' set up to track 'origin/main'.
+
+#+begin_src shell
+cd ~/.emacs.d
+git branch private
+git checkout private
+#+end_src

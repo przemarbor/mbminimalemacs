@@ -1,0 +1,2 @@
+;; Generated package description from matlab-mode.el  -*- no-byte-compile: t -*-
+(define-package "matlab-mode" "6.3" "major mode for MATLAB(R) dot-m files" '((emacs "27.2")) :commit "935137844e16551a5369f928d2591556be7fb9c2" :authors '(("Matt Wette" . "mwette@alumni.caltech.edu") ("Eric M. Ludlam" . "eludlam@mathworks.com")) :maintainer '(("Eric M. Ludlam" . "eludlam@mathworks.com") ("Uwe Brauer" . "oub@mat.ucm.es")) :keywords '("matlab(r)") :url "https://github.com/mathworks/Emacs-MATLAB-Mode")

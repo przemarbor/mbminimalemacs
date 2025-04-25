@@ -1,0 +1,41 @@
+#+title: scad-mode - Emacs mode to edit OpenSCAD files
+#+language: en
+#+export_file_name: scad-mode.texi
+#+texinfo_dir_category: Emacs misc features
+#+texinfo_dir_title: Scad-Mode: (scad-mode).
+#+texinfo_dir_desc: Edit OpenSCAD files
+
+#+html: <a href="https://www.gnu.org/software/emacs/"><img alt="GNU Emacs" src="https://github.com/minad/corfu/blob/screenshots/emacs.svg?raw=true"/></a>
+#+html: <a href="https://elpa.nongnu.org/nongnu/scad-mode.html"><img alt="NonGNU ELPA" src="https://elpa.nongnu.org/nongnu/scad-mode.svg"/></a>
+#+html: <a href="https://elpa.nongnu.org/nongnu-devel/scad-mode.html"><img alt="NonGNU-devel ELPA" src="https://elpa.nongnu.org/nongnu-devel/scad-mode.svg"/></a>
+#+html: <a href="https://melpa.org/#/scad-mode"><img alt="MELPA" src="https://melpa.org/packages/scad-mode-badge.svg"/></a>
+#+html: <a href="https://stable.melpa.org/#/scad-mode"><img alt="MELPA Stable" src="https://stable.melpa.org/packages/scad-mode-badge.svg"/></a>
+
+* Features
+
+- Syntax highlighting
+- Basic completion function (press =M-TAB=)
+- Preview rendered model in separate window (press =C-c C-c=)
+- Open buffer in OpenSCAD (press =C-c C-o=)
+- Export buffer with OpenSCAD (press =C-c C-e=)
+- Flymake support (enable =flymake-mode= in =scad-mode= buffers)
+- Org Babel support (=scad= source blocks)
+
+* Org Babel support
+
+#+begin_src scad :file example.png :colorscheme Tomorrow :size 200,200
+  for (y=[0:2:20]) {
+      translate([0,0,y+1])
+          cube([30-2*y,30-2*y,2], true);
+  }
+#+end_src
+
+* Installation
+
+Install via =M-x package-install RET scad-mode RET= from NonGNU ELPA or MELPA.
+After the installation =*.scad= files will be opened with =scad-mode=.
+
+* Related packages
+
+- [[https://github.com/lenbok/scad-dbus][scad-dbus]]: Interact with a running OpenSCAD instance from Emacs via DBUS
+- =lsp-mode=, =eglot= or =lsp-bridge=: The =openscad-lsp= server can be used with =scad-mode=

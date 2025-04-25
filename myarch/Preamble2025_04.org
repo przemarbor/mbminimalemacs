@@ -1,0 +1,172 @@
+# The 4th version of the Premble.org.
+
+#+AUTHOR: MB
+
+* COMMENT About this file :noexport:
+This is another version of my =Preamble.org.=
+
+** Changes 2025_04:
+In this iteration I did some clean up and corrected macros to be compatible
+with org-special-blocks in 2024 version.
+  
+
+** Changes 2024_05:
+- in this iteration we use =engraved= package instead of =minted=
+  for code blocks.
+
+* Content :ignore:
+
+# #+LATEX_HEADER:\usepackage{hyperref} - dodawane domyślnie przez org-mode
+#+LATEX_HEADER:\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue}
+
+#+LATEX_HEADER:\usepackage[a4paper,left=1.5cm,right=2cm,top=2cm,bottom=3.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 
+
+
+# #+LATEX_HEADER:\usepackage{hyphenat}
+#+LATEX_HEADER:\usepackage{babel}
+#+LATEX_HEADER:\usepackage{polski}
+#+LATEX_HEADER:\sloppy               % make hyphenation a bit easier for latex
+
+#+LATEX_HEADER: \usepackage[most]{tcolorbox} 
+# #+LATEX_HEADER: \usepackage{amsmath}
+# #+LATEX_HEADER: \usepackage{amsthm}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# ############ Full-stop after (sub)section title
+# ## HTML
+#+HTML_HEAD_EXTRA: <style>span[class^="section-number-"]:after { content: '.'; }</style>
+# ## LaTeX
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX_HEADER: \titlelabel{\thetitle.\quad}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# #+LaTeX_HEADER: \usepackage{xcolor}
+# #+LaTeX_HEADER: \usepackage{framed}
+# #+LaTeX_HEADER: \definecolor{shadecolor}{gray}{.95}
+# #+LaTeX_HEADER: \renewcommand{\emph}{\textit}
+
+
+# ############################################
+# https://tex.stackexchange.com/questions/611875/newtcbtheorem-with-3-entries-1-2-3
+
+#+LATEX_HEADER: \usepackage[svgnames,x11names]{xcolor}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage[notextcomp]{stix}
+# # #+LATEX_HEADER: \usepackage[most]{tcolorbox}  - dodawane kilka linijek wcześniej
+#+LATEX_HEADER: \tcbuselibrary{theorems}
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \tcbset{
+#+LATEX_HEADER:     golden/.style={
+#+LATEX_HEADER:         nobeforeafter, tcbox raise base, enhanced, boxrule=0pt, 
+#+LATEX_HEADER:         interior style={top color=Gold1!10!white, bottom color=Gold1!10!white, middle color=Gold1!50!yellow},
+#+LATEX_HEADER:         colframe=red, fuzzy halo=1pt with Gold1, description color = black, coltitle=black, fonttitle=\bfseries, separator sign={\ ---}
+#+LATEX_HEADER:     }
+#+LATEX_HEADER: }
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbexample}{Przykład}{golden}{th}
+#+LATEX_HEADER: 
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# #+LATEX_HEADER:\usepackage{tcolorbox}   % in order to have org-special-blocks-extras working
+
+# #+LATEX_HEADER:\definecolor{my-c}{cmyk}   {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER:\definecolor{my-olive}{cmyk} {0.10, 0.00, 0.34, 0.26, 1.00}
+#+LATEX_HEADER:\definecolor{my-salmon}{cmyk}{0.00, 0.31, 0.10, 0.16, 1.00}
+#+LATEX_HEADER:\definecolor{my-sand}{cmyk}  {0.00, 0.07, 0.39, 0.05, 1.00}
+#+LATEX_HEADER:\definecolor{my-steel}{cmyk} {0.23, 0.08, 0.00, 0.26, 1.00}
+#+LATEX_HEADER:\definecolor{my-sky}{cmyk}  {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER:\definecolor{my-gray}{cmyk}  {0.20, 0.20, 0.20, 0.20, 1.00}
+
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#    Math Latex commands
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#+LATEX_HEADER: \newcommand{\intab}{\int_{x_a}^{x_b}}
+#+LATEX_HEADER: \newcommand{\dotp}[1]{\langle #1 \rangle}
+
+#+LATEX_HEADER: \newcommand{\dif}{\operatorname{d} }
+#+LATEX_HEADER: \newcommand{\dx}{\operatorname{d} x}
+#+LATEX_HEADER: \newcommand{\dy}{\operatorname{d} y}
+#+LATEX_HEADER: \newcommand{\vc}{\mathbf}
+#+LATEX_HEADER: \newcommand{\odif}[2]{\frac{\dif #1}{\dif #2}}
+#+LATEX_HEADER: \newcommand{\odifn}[3]{\frac{\dif^{#3} #1}{\dif #2^{#3}}}
+#+LATEX_HEADER: \newcommand{\pdif}[2]{\frac{\partial #1}{\partial #2}}
+#+LATEX_HEADER: \newcommand{\pdifn}[3]{\frac{\partial^{#3} #1}{\partial #2^{#3}}}
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# my own macros
+
+
+# # Default settings for macros based on org-special-block
+
+#+SETUPFILE: ~/.emacs.d/myarch/lang_pl.org
+# #+INCLUDE: ~/.emacs.d/myarch/colscheme_bw.org
+#+SETUPFILE: ~/.emacs.d/myarch/colscheme_col.org
+
+
+#+MACRO: begin_box  #+begin_box :background-color white :shadow black
+#+MACRO: end_box    #+end_box 
+
+
+#+MACRO: begin_warning      #+begin_box {{{warning_box_caption}}} $1 :background-color {{{warning_box_col}}} :title-background-color {{{warning_box_col}}} :frame-color black
+#+MACRO: end_warning        #+end_box 
+
+#+MACRO: begin_remark       #+begin_box {{{remark_box_caption}}} $1 :background-color {{{remark_box_col}}} :title-background-color {{{remark_box_col}}} :frame-color black
+#+MACRO: end_remark         #+end_box 
+
+#+MACRO: begin_todo         #+begin_box {{{todo_box_caption}}} $1 :background-color {{{todo_box_col}}} :title-background-color {{{todo_box_col}}} :frame-color black
+#+MACRO: end_todo           #+end_box
+
+#+MACRO: begin_observation  #+begin_box {{{observation_box_caption}}} :background-color {{{observation_box_col}}} :title-background-color {{{observation_box_col}}} :frame-color black
+#+MACRO: end_observation    #+end_box 
+
+#+MACRO: begin_question     #+begin_box {{{question_box_caption}}} $1 :background-color {{{question_box_col}}} :title-background-color {{{question_box_col}}} :frame-color black
+#+MACRO: end_question       #+end_box 
+                          
+#+MACRO: begin_summary      #+begin_box {{{summary_box_caption}}} $1 :background-color {{{summary_box_col}}} :title-background-color {{{summary_box_col}}} :frame-color black
+#+MACRO: end_summary        #+end_box 
+
+#+MACRO: begin_hint         #+begin_box {{{hint_box_caption}}} $1 :background-color {{{hint_box_col}}} :title-background-color {{{hint_box_col}}} :frame-color black
+#+MACRO: end_hint           #+end_box 
+                            
+#+MACRO: begin_resume       #+begin_box {{{resume_box_caption}}} $1 :background-color {{{resume_box_col}}} :title-background-color {{{resume_box_col}}} :frame-color black
+#+MACRO: end_resume         #+end_box 
+                            
+#+MACRO: begin_results      #+begin_box {{{results_box_caption}}} $1 :background-color {{{results_box_col}}} :title-background-color {{{results_box_col}}} :frame-color black
+#+MACRO: end_results        #+end_box
+
+#+MACRO: begin_definition   #+begin_box {{{definition_box_caption}}} $1 :background-color {{{definition_box_col}}} :title-background-color {{{definition_box_col}}} :frame-color black
+#+MACRO: end_definition     #+end_box
+                            
+#+MACRO: begin_task         #+begin_box {{{task_box_caption}}} $1 :background-color {{{task_box_col}}} :title-background-color {{{task_box_col}}} :frame-color black
+#+MACRO: end_task           #+end_box
+                            
+#+MACRO: begin_problem      #+begin_box {{{problem_box_caption}}} $1 :background-color {{{problem_box_col}}} :title-background-color {{{problem_box_col}}} :frame-color black
+#+MACRO: end_problem        #+end_box
+                            
+#+MACRO: begin_conclusion   #+begin_box {{{conclusion_box_caption}}} $1 :background-color {{{conclusion_box_col}}} :title-background-color {{{conclusion_box_col}}} :frame-color black
+#+MACRO: end_conclusion     #+end_box
+
+#+MACRO: begin_solution     #+begin_box {{{solution_box_caption}}} $1 :background-color {{{solution_box_col}}} :title-background-color {{{solution_box_col}}} :frame-color black
+#+MACRO: end_solution       #+end_box
+
+
+
+
+# #+MACRO: begin_example  #+begin_cbox {{{example_box_caption}}} $1 :background-color {{{example_box_col}}}
+# #+MACRO: end_example    #+end_cbox 
+
+#+MACRO: begin_example      @@latex:\begin{mbexample}{$1}{$2}@@
+#+MACRO: end_example        @@latex:\end{mbexample}@@
+
+
+
+
+

@@ -1,0 +1,18 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# my own macros
+
+#+MACRO: warning_box_col     white
+#+MACRO: remark_box_col      white
+#+MACRO: todo_box_col        red
+#+MACRO: observation_box_col white
+#+MACRO: question_box_col    white
+#+MACRO: summary_box_col     white
+#+MACRO: hint_box_col        white
+#+MACRO: resume_box_col      white
+#+MACRO: results_box_col     white
+#+MACRO: example_box_col     white
+#+MACRO: definition_box_col  white
+#+MACRO: task_box_col        white 
+#+MACRO: problem_box_col     white
+#+MACRO: conclusion_box_col  white
+#+MACRO: solution_box_col    white

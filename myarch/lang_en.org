@@ -1,0 +1,18 @@
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# my own macros
+
+#+MACRO: warning_box_caption      Warning!
+#+MACRO: remark_box_caption       Remark:
+#+MACRO: todo_box_caption         ToDo:
+#+MACRO: observation_box_caption  Observation:
+#+MACRO: question_box_caption     Question:
+#+MACRO: summary_box_caption      Summary:
+#+MACRO: hint_box_caption         Hint:
+#+MACRO: resume_box_caption       Resume:
+#+MACRO: results_box_caption      Results:
+#+MACRO: example_box_caption      Example:
+#+MACRO: definition_box_caption   Definition:
+#+MACRO: task_box_caption         Task:
+#+MACRO: problem_box_caption      Problem:
+#+MACRO: conclusion_box_caption   Conclusion:
+#+MACRO: solution_box_caption     Solution:

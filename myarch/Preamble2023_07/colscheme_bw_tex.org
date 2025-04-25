@@ -1,0 +1,23 @@
+# Color schemes for BW printed version
+
+#+LATEX_HEADER: \providecommand{\warningBoxCol}{}      \renewcommand{\warningBoxCol}      {white} 
+#+LATEX_HEADER: \providecommand{\remarkBoxCol}{}       \renewcommand{\remarkBoxCol}       {white}
+
+#+LATEX_HEADER: \providecommand{\problemBoxCol}{}      \renewcommand{\problemBoxCol}      {white}    
+#+LATEX_HEADER: \providecommand{\questionBoxCol}{}     \renewcommand{\questionBoxCol}     {white}
+#+LATEX_HEADER: \providecommand{\answerBoxCol}{}       \renewcommand{\answerBoxCol}       {white}
+#+LATEX_HEADER: \providecommand{\taskBoxCol}{}         \renewcommand{\taskBoxCol}         {white}  
+#+LATEX_HEADER: \providecommand{\solutionBoxCol}{}     \renewcommand{\solutionBoxCol}     {white}
+
+#+LATEX_HEADER: \providecommand{\hintBoxCol}{}         \renewcommand{\hintBoxCol}         {white} 
+#+LATEX_HEADER: \providecommand{\resumeBoxCol}{}       \renewcommand{\resumeBoxCol}       {white} 
+#+LATEX_HEADER: \providecommand{\resultsBoxCol}{}      \renewcommand{\resultsBoxCol}      {white} 
+
+#+LATEX_HEADER: \providecommand{\observationBoxCol}{}  \renewcommand{\observationBoxCol}  {white}   
+#+LATEX_HEADER: \providecommand{\conclusionBoxCol}{}   \renewcommand{\conclusionBoxCol}   {white} 
+#+LATEX_HEADER: \providecommand{\summaryBoxCol}{}      \renewcommand{\summaryBoxCol}      {white} 
+
+#+LATEX_HEADER: \providecommand{\definitionBoxCol}{}   \renewcommand{\definitionBoxCol}   {white} 
+#+LATEX_HEADER: \providecommand{\exampleBoxCol}{}      \renewcommand{\exampleBoxCol}      {white}   
+#+LATEX_HEADER: \providecommand{\theoremBoxCol}{}      \renewcommand{\theoremBoxCol}      {white} 
+#+LATEX_HEADER: \providecommand{\lemmaBoxCol}{}        \renewcommand{\lemmaBoxCol}        {white}

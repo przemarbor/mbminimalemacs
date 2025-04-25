@@ -1,0 +1,23 @@
+# Color schemes for documents in color (sanitized version)
+
+#+LATEX_HEADER: \providecommand{\warningBoxCol}{}      \renewcommand{\warningBoxCol}      {my-salmon}
+#+LATEX_HEADER: \providecommand{\remarkBoxCol}{}       \renewcommand{\remarkBoxCol}       {my-salmon}
+
+#+LATEX_HEADER: \providecommand{\problemBoxCol}{}      \renewcommand{\problemBoxCol}      {my-olive}   
+#+LATEX_HEADER: \providecommand{\questionBoxCol}{}     \renewcommand{\questionBoxCol}     {my-olive}
+#+LATEX_HEADER: \providecommand{\answerBoxCol}{}       \renewcommand{\answerBoxCol}       {my-olive}  
+#+LATEX_HEADER: \providecommand{\taskBoxCol}{}         \renewcommand{\taskBoxCol}         {my-olive} 
+#+LATEX_HEADER: \providecommand{\solutionBoxCol}{}     \renewcommand{\solutionBoxCol}     {my-olive}
+
+#+LATEX_HEADER: \providecommand{\hintBoxCol}{}         \renewcommand{\hintBoxCol}         {my-sand}
+#+LATEX_HEADER: \providecommand{\resumeBoxCol}{}       \renewcommand{\resumeBoxCol}       {my-sand}
+#+LATEX_HEADER: \providecommand{\resultsBoxCol}{}      \renewcommand{\resultsBoxCol}      {my-sand}
+
+#+LATEX_HEADER: \providecommand{\observationBoxCol}{}  \renewcommand{\observationBoxCol}  {my-olive}  
+#+LATEX_HEADER: \providecommand{\conclusionBoxCol}{}   \renewcommand{\conclusionBoxCol}   {my-olive}
+#+LATEX_HEADER: \providecommand{\summaryBoxCol}{}      \renewcommand{\summaryBoxCol}      {my-olive}
+
+#+LATEX_HEADER: \providecommand{\definitionBoxCol}{}   \renewcommand{\definitionBoxCol}   {my-steel}
+#+LATEX_HEADER: \providecommand{\exampleBoxCol}{}      \renewcommand{\exampleBoxCol}      {my-steel} 
+#+LATEX_HEADER: \providecommand{\theoremBoxCol}{}      \renewcommand{\theoremBoxCol}      {my-steel}
+#+LATEX_HEADER: \providecommand{\lemmaBoxCol}{}        \renewcommand{\lemmaBoxCol}        {my-steel}

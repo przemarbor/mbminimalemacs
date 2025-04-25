@@ -1,0 +1,17 @@
+autosave/
+backup/
+eln-cache/
+easysession/
+undo-fu-session/
+
+history
+recentf
+saveplace
+
+#*
+#!README.md
+#!early-init.el
+#!init.el
+#!.images/
+#!.github/
+#!.LICENSE

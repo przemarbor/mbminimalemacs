@@ -1,0 +1,23 @@
+# Special block captions in English
+
+#+LATEX_HEADER: \providecommand{\warningBoxCaption}{}       \renewcommand{\warningBoxCaption}         {Warning!}
+#+LATEX_HEADER: \providecommand{\remarkBoxCaption}{}        \renewcommand{\remarkBoxCaption}          {Remark:}
+
+#+LATEX_HEADER: \providecommand{\problemBoxCaption}{}       \renewcommand{\problemBoxCaption}         {Problem:}
+#+LATEX_HEADER: \providecommand{\questionBoxCaption}{}      \renewcommand{\questionBoxCaption}        {Question:}
+#+LATEX_HEADER: \providecommand{\answerBoxCaption}{}        \renewcommand{\answerBoxCaption}          (Answer:}    
+#+LATEX_HEADER: \providecommand{\taskBoxCaption}{}          \renewcommand{\taskBoxCaption}            {Task:}
+#+LATEX_HEADER: \providecommand{\solutionBoxCaption}{}      \renewcommand{\solutionBoxCaption}        {Solution}
+
+#+LATEX_HEADER: \providecommand{\hintBoxCaption}{}          \renewcommand{\hintBoxCaption}            {Hint:}
+#+LATEX_HEADER: \providecommand{\resumeBoxCaption}{}        \renewcommand{\resumeBoxCaption}          {Resume:}
+#+LATEX_HEADER: \providecommand{\resultsBoxCaption}{}       \renewcommand{\resultsBoxCaption}         {Results:}
+
+#+LATEX_HEADER: \providecommand{\observationBoxCaption}{}   \renewcommand{\observationBoxCaption}     {Observation:}
+#+LATEX_HEADER: \providecommand{\conclusionBoxCaption}{}    \renewcommand{\conclusionBoxCaption}      {Conclusion:}
+#+LATEX_HEADER: \providecommand{\summaryBoxCaption}{}       \renewcommand{\summaryBoxCaption}         {Summary:}
+
+#+LATEX_HEADER: \providecommand{\definitionBoxCaption}{}    \renewcommand{\definitionBoxCaption}      {Definition:}  
+#+LATEX_HEADER: \providecommand{\exampleBoxCaption}{}       \renewcommand{\exampleBoxCaption}         {Example:}
+#+LATEX_HEADER: \providecommand{\theoremBoxCaption}{}       \renewcommand{\theoremBoxCaption}         {Theorem:}
+#+LATEX_HEADER: \providecommand{\lemmaBoxCaption}{}         \renewcommand{\lemmaBoxCaption}           {Lemma:}

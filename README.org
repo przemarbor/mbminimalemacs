@@ -10,6 +10,7 @@
 * Spis treści :TOC_4:
 - [[#minimal-emacsd][Minimal .emacs.d]]
   - [[#stworzenie-repozytorium-od-nowa][Stworzenie repozytorium od nowa]]
+  - [[#praca][Praca]]
 
 * Minimal .emacs.d
 To jest publiczna wersja mojej konfiguracji =.emacs.d= bazująca na repozytorium:
@@ -22,9 +23,6 @@ cd ~/.emacs.d
 rm -rf .git
 git init
 #+end_src
-
-#+RESULTS:
-: Zainicjowano puste repozytorium Gita w /home/mb/.emacs.d/.git/
 
 Wyeksportuj treść org-file'a z flaga nonprivate
 
@@ -43,11 +41,26 @@ git branch -M main
 git push -u origin main
 #+end_src
 
-#+RESULTS:
-: branch 'main' set up to track 'origin/main'.
-
 #+begin_src shell
 cd ~/.emacs.d
 git branch private
 git checkout private
 #+end_src
+
+
+
+** Praca
+Zakomituj na public:
+
+#+begin_src shell
+cd ~/.emacs.d
+git commit -m "Kolejny commit"
+git push -u origin main
+#+end_src
+
+#+begin_src shell
+cd ~/.emacs.d
+git checkout private
+#+end_src
+Przełącz się w org na private i wytangluj wersję prywatną.
+Pracuj...

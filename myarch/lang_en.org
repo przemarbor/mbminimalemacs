@@ -16,3 +16,20 @@
 #+MACRO: problem_box_caption      Problem:
 #+MACRO: conclusion_box_caption   Conclusion:
 #+MACRO: solution_box_caption     Solution:
+
+
+#+LATEX_HEADER: \newcommand{\warningBoxCaption}{Warning!}
+#+LATEX_HEADER: \newcommand{\remarkBoxCaption}{Remark:}
+#+LATEX_HEADER: \newcommand{\todoBoxCaption}{ToDo:}
+#+LATEX_HEADER: \newcommand{\observationBoxCaption}{Observation}
+#+LATEX_HEADER: \newcommand{\questionBoxCaption}{Question:}
+#+LATEX_HEADER: \newcommand{\summaryBoxCaption}{Summary:}
+#+LATEX_HEADER: \newcommand{\hintBoxCaption}{Hint:}
+#+LATEX_HEADER: \newcommand{\resumeBoxCaption}{Resume:}
+#+LATEX_HEADER: \newcommand{\resultsBoxCaption}{Results:}
+#+LATEX_HEADER: \newcommand{\exampleBoxCaption}{Example:}
+#+LATEX_HEADER: \newcommand{\definitionBoxCaption}{Definition:}
+#+LATEX_HEADER: \newcommand{\taskBoxCaption}{Task:}
+#+LATEX_HEADER: \newcommand{\problemBoxCaption}{Problem:}
+#+LATEX_HEADER: \newcommand{\conclusionBoxCaption}{Conclusion:}
+#+LATEX_HEADER: \newcommand{\solutionBoxCaption}{Solution:}

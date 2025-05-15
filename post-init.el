@@ -293,7 +293,8 @@
 (use-package emacs
  :init
   (mapc #'disable-theme custom-enabled-themes)  ; Wyłącz wszystkie aktywne motywy
-  
+
+  (defun mb/modus-settings ()
   ;; Add all your customizations prior to loading the themes
   (setq modus-themes-italic-constructs t
         modus-themes-bold-constructs nil
@@ -308,16 +309,36 @@
 
   (setq modus-themes-scale-headings t)
   (setq modus-themes-org-blocks 'tinted-background)
-
+  )
+  
   ;; Auxiliary function to toggle betwen bright and dark theme
+
+  ;; ----- OLD VERSION -----
+  ;; (defun toggle-theme ()
+  ;;   (interactive)
+  ;;   (if (eq (car custom-enabled-themes) 'modus-vivendi)
+  ;;       (disable-theme 'modus-vivendi)
+  ;;     (load-theme 'modus-vivendi :noconfirm))
+  ;;   )
+
+  ;; ------ NEW VERSION ------
   (defun toggle-theme ()
     (interactive)
     (if (eq (car custom-enabled-themes) 'modus-vivendi)
+        (progn
         (disable-theme 'modus-vivendi)
-      (load-theme 'modus-vivendi :noconfirm)))
+        (load-theme 'modus-operandi :noconfirm)
+        (mb/modus-settings)
+        ;; (load-theme 'modus-operandi :noconfirm) - happens by default ??
+        )
+        (load-theme 'modus-vivendi :noconfirm))
+
+    )
+
   
   (global-set-key [f6] 'toggle-theme)
-  
+
+  (mb/modus-settings)
   (load-theme 'modus-vivendi :noconfirm)  
 )
 
@@ -716,22 +737,6 @@
   ;; (require 'MB-org-special-block-extras)
 )
 
-;; (add-hook #'org-mode-hook #'org-special-block-extras-mode)
-
-(use-package htmlize ;; needed to have org-special-block-extras exporting to html flawlessly
-  :defer t
-)
-
-(use-package org-special-block-extras
-  :ensure t  
-  :hook (org-mode . org-special-block-extras-mode)
-  ;; All relevant Lisp functions are prefixed ‘o-’; e.g., `o-docs-insert'.
-  ;; :custom
-  ;;   (o-docs-libraries
-  ;;    '("~/org-special-block-extras/documentation.org")
-  ;;    "The places where I keep my ‘#+documentation’")
-)
-
 ;; toc-org for table of contents in org-mode
 (use-package toc-org
   :commands toc-org-enable
@@ -884,10 +889,230 @@
     (add-to-list 'org-babel-load-languages '(scad . t))
     (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
 
-(use-package emacs
+;; (use-package emacs
+(use-package org
  :init
+  ; set Monday as the starting day of the week 
+  (setq calendar-week-start-day 1)
+
+  ;;;; UWAGA - to musi byc ustawione tutaj !!!!!
+  ;;;; w przeciwnym wypadku beda i tak odczytywane angielskie swieta!!!
+  (add-to-list 'load-path "~/projects/polish-holidays/")
+  (require 'polish-holidays)
+  (polish-holidays-set)
+
+
+
   ;; Set your agenda files/directories (as a list of paths)
-  (setq org-agenda-files '("~/org/agenda/" "~/.notes") )
+  (setq mb/org-agenda-public-files '("~/org/agenda/" "~/.notes"))
+  ;; (setq mb/diary-file "~/.mysecrets/diary.org")
+  ;; (setq mb/org-agenda-private-files (append mb/org-agenda-public-files (list mb/diary-file)))
+  (setq mb/org-agenda-private-files '("~/.mysecrets/diary.org"))
+  (setq mb/org-agenda-all-files  (append mb/org-agenda-public-files mb/org-agenda-private-files))
+
+  (setq org-agenda-files mb/org-agenda-public-files)
+
+
+  ;; (setq diary-file mb/diary-file)
+
+  ;; ;; disable unnecessary calendars and add calendar diary to agenda
+  ;; ;; 
+  ;; '(holiday-bahai-holidays nil)
+  ;; '(holiday-hebrew-holidays nil)
+  ;; '(holiday-islamic-holidays nil)
+  
+  ;; ;; do not set this variable if you add diary in org-agenda-files!
+  ;; (setq org-agenda-include-diary nil)
+
+  ;; to avoid double entries in agenda view
+  ;; https://github.com/Trevoke/org-gtd.el/issues/198
+  ;; (setq org-agenda-skip-additional-timestamps-same-entry t) ;; does not work in my case
+  
+  (setq org-priority-faces
+        '(
+          (?A :foreground "#FF6c6b" :weight bold)
+          (?B :foreground "#98be65" :weight bold)
+          (?C :foreground "#c678dd" :weight bold)
+          )
+        )
+
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  
+)
+
+;; (use-package emacs
+(use-package org
+ :init
+ (setq org-agenda-custom-commands
+      '(
+        ;; ("P" "Agenda to publish" ((agenda "")) nil "~/temp/!agenda!.html")
+        ;; ("p" "publish and export to webpage" (mb/publish-agenda) )
+        
+        ("2" .  "Dwa tygodnie")
+        ("22" "Two week span"
+            ((agenda ""))
+            (
+             (org-agenda-overriding-header "Two week span")
+             (org-agenda-start-on-weekday 1)
+             (org-agenda-span 14)
+             (org-agenda-start-day "0d")
+             (org-agenda-files mb/org-agenda-public-files)
+             )
+             "~/temp/!agenda!.html"
+             )  
+        
+        ("2p" "Two week span"
+            ((agenda ""))
+            (
+             (org-agenda-overriding-header "Two week span")
+             (org-agenda-start-on-weekday 1)
+             (org-agenda-span 14)
+             (org-agenda-start-day "0d")
+             (org-agenda-files mb/org-agenda-all-files)
+             )
+             "~/temp/!agendap!.html"
+             )
+        
+        ;; ("2" "Marching Two week span" ;; starting from yesterday
+        ;;     ((agenda ""))
+        ;;     (
+        ;;      (org-agenda-overriding-header "Two week marching span")
+        ;;      (org-agenda-start-on-weekday nil)             
+        ;;      (org-agenda-span 14)
+        ;;      (org-agenda-start-day "-1d")    
+        ;;      ; (org-agenda-include-diary nil)
+        ;;      ; (diary-file "")
+        ;;      )
+        ;;      "~/temp/!agenda!.html")        
+
+        
+        ("4" .  "Miesiac")
+        ( "44" "Marching Month span" ;; starting from yesterday
+            ((agenda ""))
+            (
+             (org-agenda-overriding-header "A month marching span")
+             (org-agenda-start-on-weekday nil)
+             (org-agenda-span 31)
+             (org-agenda-start-day "-1d")
+             (org-agenda-files mb/org-agenda-public-files)
+             )
+             nil ; "~/temp/!agenda!.html"
+             )
+
+        ("4p" "Marching Month span with secrets" ;; starting from yesterday
+            ((agenda ""))
+            (
+             (org-agenda-overriding-header "A month marching span- TEST")
+             (org-agenda-start-on-weekday nil)
+             (org-agenda-span 31)
+             (org-agenda-start-day "-1d")
+             (org-agenda-files mb/org-agenda-all-files)
+             )
+             nil ; "~/temp/!agenda!.html"
+             )
+
+        
+       ("y" "This year calendar" ;; 
+            ((agenda ""))
+            (
+             (org-agenda-overriding-header "This year calendar")
+             (org-agenda-start-on-weekday nil)
+             (org-agenda-span 366)
+             (org-agenda-start-day (concat "jan 1" (format-time-string " %Y") ) ) ; pierwszy styczeń biezacego roku             
+             ;; ; (org-agenda-start-day (concat "jan 1 2026"  ) ) ; pierwszy styczeń biezacego roku
+             (org-agenda-files mb/org-agenda-all-files)
+             )
+             nil ; "~/temp/!agenda!.html"
+             )
+
+        ("p" "Publish and export" ;; starting from yesterday
+            ((mb/publish-agenda ""))
+            (
+             )
+             nil ; "~/temp/!agenda!.html"
+             )
+        
+        ;; ("X" agenda "" nil ("agenda.html"))        
+        ;; ("Y" alltodo "" nil ("todo.html" "todo.txt" "todo.ps"))
+        ;; ("h" "Agenda and Home-related tasks"
+        ;;  ((agenda "")
+        ;;   (tags-todo "home")
+        ;;   (tags "garden"))
+        ;;  nil
+        ;;  ("~/views/home.html"))
+        ;; ("o" "Agenda and Office-related tasks"
+        ;;  ((agenda)
+        ;;   (tags-todo "work")
+        ;;   (tags "office"))
+        ;;  nil
+        ;;  ("~/views/office.ps" "~/calendars/office.ics"))
+         ))
+
+  (defun mb/export-file-to-ftp(localFilePath ftpDirPath)
+    (shell-command-to-string (concat 
+      "lftp -u " marbor_credentials-login "," marbor_credentials-pass  " strony.prz.edu.pl << EOF
+set ftp:ssl-force true         # this is done in order to prevent some errors
+set ssl:verify-certificate no  # and warnings if your server is moody
+cd web/
+cd " ftpDirPath "
+put " localFilePath "
+bye
+EOF")
+)  
+  )
+  
+  (defun mb/publish-agenda ()
+    (interactive)
+
+    (load-file (concat user-emacs-directory "../.mysecrets/strony_marbor_credentials.el"))
+    ;; wyeksportuj widoki zdefiniowane w ~org-agenda-custom-commands~
+    ;; (org-store-agenda-views "~/temp/agenda.html")
+    ;; (setq (org-agenda-include-diary nil)
+    ;; (let ((temporary-diary-var diary-file))
+    ;;     ;(setq diary-file nil)
+    ;;     (org-store-agenda-views)
+    ;;     (setq diary-file temporary-diary-var)
+    ;; )
+
+    (org-store-agenda-views)
+    (mb/export-file-to-ftp "~/temp/!agenda!.html" "./")
+    (mb/export-file-to-ftp "~/temp/!agendap!.html" "./")
+    (delete-file "~/temp/!agenda!.html" "./")
+    (delete-file "~/temp/!agendap!.html" "./")
+      ;; )
+    )
+
+    (global-set-key (kbd "C-c 1") #'mb/publish-agenda)  
+
+  
+)
+
+;; (use-package emacs
+(use-package calfw
+ :after org
+ 
+ :init
+  (defun cfw:open-mb-calendar ()
+   (interactive)
+   (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")  ; orgmode source
+    ; (cfw:howm-create-source "Blue")  ; howm source
+    (cfw:cal-create-source "Orange") ; diary source
+    ; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+    ; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
+   )))
+
+  (global-set-key (kbd "C-c k") #'cfw:open-mb-calendar)  
+)
+
+(use-package calfw-cal
+ :after calfw
+)
+
+(use-package calfw-org
+ :after calfw
 )
 
 ;; (use-package emacs
@@ -907,6 +1132,10 @@
   :init
   ;; Enable plantuml-mode for PlantUML files
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+
+  ;; enable working with executable plantuml (not jar)
+  (setq plantuml-executable-path "plantuml")
+  (setq org-plantuml-exec-mode 'plantuml)
   
   :config
   ;; Integration with org-mode
@@ -942,8 +1171,8 @@
   (interactive)
   ;; (shell-command "dolphin .")  
   ;; (shell-command "thunar . &")  ; to uruchamia w shell-async!
-  ;; (async-shell-command "thunar &")
-  (start-process "my-browse" nil "setsid" "thunar")
+   (async-shell-command "thunar &")
+  ;; (start-process "my-browse" nil "setsid" "thunar")
   )
 
   (define-key global-map (kbd "<s-f12>") 'mb/browse-file-directory)
@@ -958,7 +1187,9 @@
     (if buffer-file-name
         (progn
         (kill-new (expand-file-name (file-name-directory buffer-file-name)))
-        (message "Copied buffer directory to kill-ring:: %s" (file-name-directory buffer-file-name)))
+        ;; (message "Copied buffer directory to kill-ring:: %s" (file-name-directory buffer-file-name))
+        (message "%s" (file-name-directory buffer-file-name))
+        )
       (message "Current buffer is not a file's buffer.")))
 
   (defun mb/buffer-absolute-path ()
@@ -967,7 +1198,9 @@
     (if buffer-file-name
         (progn
           (kill-new (expand-file-name buffer-file-name))
-          (message "Copied buffer file path to kill-ring: %s" buffer-file-name))
+          ;; (message "Copied buffer file path to kill-ring: %s" buffer-file-name)
+          (message "%s" buffer-file-name)
+          )
       (message "Current buffer is not visiting a file.")))
 
 )

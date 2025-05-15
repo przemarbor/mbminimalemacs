@@ -16,3 +16,19 @@
 #+MACRO: problem_box_col     white
 #+MACRO: conclusion_box_col  white
 #+MACRO: solution_box_col    white
+
+#+LATEX_HEADER: \newcommand{\warningBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\remarkBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\todoBoxCol}{red}
+#+LATEX_HEADER: \newcommand{\observationBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\questionBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\summaryBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\hintBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\resumeBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\resultsBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\exampleBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\definitionBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\taskBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\problemBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\conclusionBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\solutionBoxCol}{white}

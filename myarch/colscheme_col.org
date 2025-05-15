@@ -16,3 +16,20 @@
 #+MACRO: problem_box_col     my-steel
 #+MACRO: conclusion_box_col  my-steel
 #+MACRO: solution_box_col    white
+
+#+LATEX_HEADER: \newcommand{\warningBoxCol}{my-salmon}
+#+LATEX_HEADER: \newcommand{\remarkBoxCol}{my-salmon}
+#+LATEX_HEADER: \newcommand{\todoBoxCol}{red}
+#+LATEX_HEADER: \newcommand{\observationBoxCol}{my-olive}
+#+LATEX_HEADER: \newcommand{\questionBoxCol}{my-steel}
+#+LATEX_HEADER: \newcommand{\summaryBoxCol}{my-sky}
+#+LATEX_HEADER: \newcommand{\hintBoxCol}{my-sand}
+#+LATEX_HEADER: \newcommand{\resumeBoxCol}{my-sand}
+#+LATEX_HEADER: \newcommand{\resultsBoxCol}{white}
+#+LATEX_HEADER: \newcommand{\exampleBoxCol}{my-olive}
+#+LATEX_HEADER: \newcommand{\definitionBoxCol}{my-steel}
+#+LATEX_HEADER: \newcommand{\taskBoxCol}{my-steel}
+#+LATEX_HEADER: \newcommand{\problemBoxCol}{my-steel}
+#+LATEX_HEADER: \newcommand{\conclusionBoxCol}{my-steel}
+#+LATEX_HEADER: \newcommand{\solutionBoxCol}{white}
+

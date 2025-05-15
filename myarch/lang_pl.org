@@ -14,5 +14,22 @@
 #+MACRO: definition_box_caption   Definicja:
 #+MACRO: task_box_caption         Zadanie:
 #+MACRO: problem_box_caption      Problem:
-#+MACRO: conclusion_box_caption   Conclusion:
+#+MACRO: conclusion_box_caption   Wniosek:
 #+MACRO: solution_box_caption     Rozwiązanie:
+
+
+#+LATEX_HEADER: \newcommand{\warningBoxCaption}{Uwaga!}
+#+LATEX_HEADER: \newcommand{\remarkBoxCaption}{Uwaga:}
+#+LATEX_HEADER: \newcommand{\todoBoxCaption}{UZUPELNIC:}
+#+LATEX_HEADER: \newcommand{\observationBoxCaption}{Spostrzeżenie}
+#+LATEX_HEADER: \newcommand{\questionBoxCaption}{Pytanie:}
+#+LATEX_HEADER: \newcommand{\summaryBoxCaption}{Podsumowanie:}
+#+LATEX_HEADER: \newcommand{\hintBoxCaption}{Podpowiedź:}
+#+LATEX_HEADER: \newcommand{\resumeBoxCaption}{Przypomnienie:}
+#+LATEX_HEADER: \newcommand{\resultsBoxCaption}{Wyniki:}
+#+LATEX_HEADER: \newcommand{\exampleBoxCaption}{Przykład:}
+#+LATEX_HEADER: \newcommand{\definitionBoxCaption}{Definicja:}
+#+LATEX_HEADER: \newcommand{\taskBoxCaption}{Zadanie:}
+#+LATEX_HEADER: \newcommand{\problemBoxCaption}{Problem:}
+#+LATEX_HEADER: \newcommand{\conclusionBoxCaption}{Wniosek:}
+#+LATEX_HEADER: \newcommand{\solutionBoxCaption}{Rozwiązanie:}

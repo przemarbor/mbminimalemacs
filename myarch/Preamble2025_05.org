@@ -1,0 +1,187 @@
+# The 4th version of the Premble.org.
+
+#+AUTHOR: MB
+
+* COMMENT About this file :noexport:
+This is another version of my =Preamble.org.=
+
+** Changes 2025_05:
+I need to take a rest from =org-special-blocks=!
+This package is a regular source of problems in my case.
+I'm heading to pure latex solution as for now.
+We'll see in the future what to do next.
+
+From now on, we can't insert blocks =#+begin_export latex= and =#+end_export=
+inside environment macros like ={{{task_box}}}= in order to have
+nicely colored latex equations in Emacs editor.
+The reason is that it breaks Emacs org->tex export process.
+
+
+
+** Changes 2025_04:
+In this iteration I did some clean up and corrected macros to be compatible
+with org-special-blocks in 2024 version.
+  
+
+** Changes 2024_05:
+- in this iteration we use =engraved= package instead of =minted=
+  for code blocks.
+
+* Content :ignore:
+
+# #+LATEX_HEADER:\usepackage{hyperref} - dodawane domyślnie przez org-mode
+#+LATEX_HEADER:\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue}
+
+#+LATEX_HEADER:\usepackage[a4paper,left=1.5cm,right=2cm,top=2cm,bottom=3.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 
+
+
+# #+LATEX_HEADER:\usepackage{hyphenat}
+#+LATEX_HEADER:\usepackage{babel}
+#+LATEX_HEADER:\usepackage{polski}
+#+LATEX_HEADER:\sloppy               % make hyphenation a bit easier for latex
+
+#+LATEX_HEADER: \usepackage[most]{tcolorbox} 
+# #+LATEX_HEADER: \usepackage{amsmath}
+# #+LATEX_HEADER: \usepackage{amsthm}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# ############ Full-stop after (sub)section title
+# ## HTML
+#+HTML_HEAD_EXTRA: <style>span[class^="section-number-"]:after { content: '.'; }</style>
+# ## LaTeX
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX_HEADER: \titlelabel{\thetitle.\quad}
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# #+LaTeX_HEADER: \usepackage{xcolor}
+# #+LaTeX_HEADER: \usepackage{framed}
+# #+LaTeX_HEADER: \definecolor{shadecolor}{gray}{.95}
+# #+LaTeX_HEADER: \renewcommand{\emph}{\textit}
+
+
+# ############################################
+# https://tex.stackexchange.com/questions/611875/newtcbtheorem-with-3-entries-1-2-3
+
+#+LATEX_HEADER: \usepackage[svgnames,x11names]{xcolor}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage[notextcomp]{stix}
+# # #+LATEX_HEADER: \usepackage[most]{tcolorbox}  - dodawane kilka linijek wcześniej
+#+LATEX_HEADER: \tcbuselibrary{theorems}
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \tcbset{
+#+LATEX_HEADER:     golden/.style={
+#+LATEX_HEADER:         nobeforeafter, tcbox raise base, enhanced, boxrule=0pt, 
+#+LATEX_HEADER:         interior style={top color=Gold1!10!white, bottom color=Gold1!10!white, middle color=Gold1!50!yellow},
+#+LATEX_HEADER:         colframe=red, fuzzy halo=1pt with Gold1, description color = black, coltitle=black, fonttitle=\bfseries, separator sign={\ ---}
+#+LATEX_HEADER:     }
+#+LATEX_HEADER: }
+#+LATEX_HEADER: 
+#+LATEX_HEADER: \newtcbtheorem[number within=section]{mbexample}{Przykład}{golden}{th}
+#+LATEX_HEADER: 
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+# #+LATEX_HEADER:\usepackage{tcolorbox}   % in order to have org-special-blocks-extras working
+
+# #+LATEX_HEADER:\definecolor{my-c}{cmyk}   {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER:\definecolor{my-olive}{cmyk} {0.10, 0.00, 0.34, 0.26, 1.00}
+#+LATEX_HEADER:\definecolor{my-salmon}{cmyk}{0.00, 0.31, 0.10, 0.16, 1.00}
+#+LATEX_HEADER:\definecolor{my-sand}{cmyk}  {0.00, 0.07, 0.39, 0.05, 1.00}
+#+LATEX_HEADER:\definecolor{my-steel}{cmyk} {0.23, 0.08, 0.00, 0.26, 1.00}
+#+LATEX_HEADER:\definecolor{my-sky}{cmyk}  {0.25, 0.00, 0.08, 0.04, 1.00}
+#+LATEX_HEADER:\definecolor{my-gray}{cmyk}  {0.20, 0.20, 0.20, 0.20, 1.00}
+
+
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#    Math Latex commands
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#+LATEX_HEADER: \newcommand{\intab}{\int_{x_a}^{x_b}}
+#+LATEX_HEADER: \newcommand{\dotp}[1]{\langle #1 \rangle}
+
+#+LATEX_HEADER: \newcommand{\dif}{\operatorname{d} }
+#+LATEX_HEADER: \newcommand{\dx}{\operatorname{d} x}
+#+LATEX_HEADER: \newcommand{\dy}{\operatorname{d} y}
+#+LATEX_HEADER: \newcommand{\vc}{\mathbf}
+#+LATEX_HEADER: \newcommand{\odif}[2]{\frac{\dif #1}{\dif #2}}
+#+LATEX_HEADER: \newcommand{\odifn}[3]{\frac{\dif^{#3} #1}{\dif #2^{#3}}}
+#+LATEX_HEADER: \newcommand{\pdif}[2]{\frac{\partial #1}{\partial #2}}
+#+LATEX_HEADER: \newcommand{\pdifn}[3]{\frac{\partial^{#3} #1}{\partial #2^{#3}}}
+
+
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# my own macros
+
+
+# # Default settings for macros based on org-special-block
+# # UPDATE: org-special-block packages causes errors and warnings every now
+# # and then. That's why I decided to move to pure latex solution as for now...
+
+#+SETUPFILE: ~/.emacs.d/myarch/lang_pl.org
+# #+INCLUDE: ~/.emacs.d/myarch/colscheme_bw.org
+#+SETUPFILE: ~/.emacs.d/myarch/colscheme_col.org
+
+
+#+MACRO: begin_box  #+begin_box :background-color white :shadow black
+#+MACRO: end_box    #+end_box 
+
+
+#+MACRO: begin_warning      \begin{tcolorbox}[title={{{{warning_box_caption}}}},colback={{{warning_box_col}}},colframe=black,colbacktitle={{{warning_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_warning        \end{tcolorbox}
+
+#+MACRO: begin_remark       \begin{tcolorbox}[title={{{{remark_box_caption}}}},colback={{{remark_box_col}}},colframe=black,colbacktitle={{{remark_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_remark         \end{tcolorbox} 
+
+#+MACRO: begin_todo         \begin{tcolorbox}[title={{{{todo_box_caption}}}},colback={{{todo_box_col}}},colframe=black,colbacktitle={{{todo_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_todo           \end{tcolorbox}
+
+#+MACRO: begin_observation  \begin{tcolorbox}[title={{{{observation_box_caption}}}},colback={{{observation_box_col}}},colframe=black,colbacktitle={{{observation_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_observation    \end{tcolorbox} 
+
+#+MACRO: begin_question     @@latex:\begin{tcolorbox}[title=\questionBoxCaption,colback=\questionBoxCol,colframe=black,colbacktitle=\questionBoxCol,coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]@@
+#+MACRO: end_question       @@latex:\end{tcolorbox}@@
+                          
+#+MACRO: begin_summary      \begin{tcolorbox}[title={{{{summary_box_caption}}}},colback={{{summary_box_col}}},colframe=black,colbacktitle={{{summary_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_summary        \end{tcolorbox} 
+
+#+MACRO: begin_hint         \begin{tcolorbox}[title={{{{hint_box_caption}}}},colback={{{hint_box_col}}},colframe=black,colbacktitle={{{hint_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_hint           \end{tcolorbox} 
+                            
+#+MACRO: begin_resume       \begin{tcolorbox}[title={{{{resume_box_caption}}}},colback={{{resume_box_col}}},colframe=black,colbacktitle={{{resume_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_resume         \end{tcolorbox} 
+                            
+#+MACRO: begin_results      \begin{tcolorbox}[title={{{{results_box_caption}}}},colback={{{results_box_col}}},colframe=black,colbacktitle={{{results_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_results        \end{tcolorbox}
+
+#+MACRO: begin_definition   \begin{tcolorbox}[title={{{{definition_box_caption}}}},colback={{{definition_box_col}}},colframe=black,colbacktitle={{{definition_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_definition     \end{tcolorbox}
+                            
+#+MACRO: begin_task         @@latex:\begin{tcolorbox}[title=\taskBoxCaption,colback=\taskBoxCol,colframe=black,colbacktitle=\taskBoxCol,coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]@@
+#+MACRO: end_task           @@latex:\end{tcolorbox}@@
+                            
+#+MACRO: begin_problem      \begin{tcolorbox}[title={{{{problem_box_caption}}}},colback={{{problem_box_col}}},colframe=black,colbacktitle={{{problem_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_problem        \end{tcolorbox}
+                            
+#+MACRO: begin_conclusion   \begin{tcolorbox}[title={{{{conclusion_box_caption}}}},colback={{{conclusion_box_col}}},colframe=black,colbacktitle={{{conclusion_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_conclusion     \end{tcolorbox}
+
+#+MACRO: begin_solution     \begin{tcolorbox}[title={{{{solution_box_caption}}}},colback={{{solution_box_col}}},colframe=black,colbacktitle={{{solution_box_col}}},coltitle=black, fonttitle=\bfseries,subtitle style={boxrule=0.4pt, colback=yellow!50!red!25!white}]
+#+MACRO: end_solution       \end{tcolorbox}
+
+
+
+
+# #+MACRO: begin_example  #+begin_cbox {{{example_box_caption}}} $1 :background-color {{{example_box_col}}}
+# #+MACRO: end_example    #+end_cbox 
+
+#+MACRO: begin_example      @@latex:\begin{mbexample}{$1}{$2}@@
+#+MACRO: end_example        @@latex:\end{mbexample}@@
+
+
+
+
+

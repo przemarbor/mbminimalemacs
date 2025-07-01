@@ -19,7 +19,7 @@ with org-special-blocks in 2024 version.
 # #+LATEX_HEADER:\usepackage{hyperref} - dodawane domyślnie przez org-mode
 #+LATEX_HEADER:\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue}
 
-#+LATEX_HEADER:\usepackage[a4paper,left=1.5cm,right=2cm,top=2cm,bottom=3.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 
+#+LATEX_HEADER:\usepackage[a4paper,left=2.5cm,right=2.5cm,top=2cm,bottom=3.5cm,includefoot=false,includehead=false,footskip=1.16cm]{geometry} 
 
 
 # #+LATEX_HEADER:\usepackage{hyphenat}

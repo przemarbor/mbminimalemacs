@@ -11,3 +11,6 @@
 
 ;; enable all UI features by default
 (setq minimal-emacs-ui-features '(context-menu tool-bar menu-bar dialogs tooltips))
+
+; disable toolbar in my own customization
+(setq tool-bar-mode nil)

@@ -93,6 +93,55 @@
 ;; (setq org-src-preserve-indentation     t
 ;;       org-edit-src-content-indentation 0)
 
+(use-package emacs
+ :config
+  ;; Do not deselect after M-w copying ->
+  (defadvice kill-ring-save (after keep-transient-mark-active ())
+   "Override the deactivation of the mark."
+    (setq deactivate-mark nil))
+  (ad-activate 'kill-ring-save)
+  ;; <- Do not deselect after M-w copying
+)
+
+(use-package emacs
+ :config
+;; Ścieżka do pliku logów
+(defvar my-message-log-file "~/.emacs.d/message-log.txt"
+  "File to log all messages from `message' function.")
+
+;; Przechowujemy oryginalną funkcję 'message' tylko raz
+(defvar my/original-message (symbol-function 'message)
+  "The original `message` function before overriding.")
+
+;; Nadpisujemy 'message', aby logował również do pliku
+(defun my/log-message-to-file (format-string &rest args)
+  "Log messages to a file and echo area."
+  (let ((message-text (apply 'format format-string args)))
+    (with-temp-buffer
+      (insert (format-time-string "[%Y-%m-%d %H:%M:%S] "))
+      (insert message-text "\n")
+      (append-to-file (point-min) (point-max) my-message-log-file))
+    (apply my/original-message format-string args)))
+
+;; Zastąp 'message' naszą funkcją
+(fset 'message #'my/log-message-to-file)
+
+;; Funkcja do kopiowania ostatniego komunikatu
+(defun copy-last-message-to-kill-ring ()
+  "Copy the last message from the echo area to the kill ring."
+  (interactive)
+  (let ((msg (current-message)))
+    (if msg
+        (progn
+          (kill-new msg)
+          (message "Copied to kill-ring: %s" msg))
+      (message "No message to copy."))))
+
+;; Opcjonalnie: skrót klawiszowy
+;; (global-set-key (kbd "C-c m") #'copy-last-message-to-kill-ring)
+
+)
+
 ;; Enable `auto-save-mode' to prevent data loss. Use `recover-file' or
 ;; `recover-session' to restore unsaved changes.
 (setq auto-save-default t)
@@ -134,6 +183,14 @@
   (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-elisp-block))
+
+(use-package magit
+  :init
+  (message "Loading Magit!")
+  :config
+  (message "Loaded Magit!")
+  :bind (("C-x g" . magit-status)
+         ("C-x C-g" . magit-status)))
 
 (use-package vertico
   ;; (Note: It is recommended to also enable the savehist package.)
@@ -398,7 +455,39 @@
   ;; useful for those using minimal-emacs.d, where some optimizations restore
   ;; `file-name-handler-alist` at depth 101 during `emacs-startup-hook`.)
   (add-hook 'emacs-startup-hook #'easysession-load-including-geometry 102)
-  (add-hook 'emacs-startup-hook #'easysession-save-mode 103))
+  (add-hook 'emacs-startup-hook #'easysession-save-mode 103)
+
+
+  ;; Modification of the usage presented here:
+  ;; https://github.com/jamescherti/easysession.el#how-to-make-easysession-kill-all-buffers-before-loading-a-session
+  ;; 
+  
+  (defun kill-old-session-buffers ()    
+  (save-some-buffers t)
+  (mapc #'kill-buffer
+        (cl-remove-if
+         (lambda (buffer)
+           (string= (buffer-name buffer) "*Messages*"))
+         (buffer-list)))
+  (delete-other-windows))
+
+  (defun easysession-save-kill-and-switch ()
+    (interactive)
+    (easysession-save)
+    (easysession-switch-to "dump")
+    (kill-old-session-buffers)
+    (easysession-switch-to)   ;;; this does not work as intended (does not invoke session menu)
+  )
+  
+  ;; (global-set-key (kbd "C-c k") 'easysession-kill-and-switch)
+  (global-set-key (kbd "C-c k") (lambda () (interactive)
+                                  (easysession-save-kill-and-switch)
+                                  (easysession-switch-to) )) ;;; this does not work as intended (does not invoke session menu)
+  
+  ;; (add-hook 'easysession-before-load-hook #'kill-old-session-buffers)
+  ;; (add-hook 'easysession-new-session-hook #'kill-old-session-buffers)
+
+  )
 
 (use-package ispell
   :ensure nil
@@ -865,7 +954,9 @@
   (org-babel-do-load-languages
    'org-babel-load-languages '(
 			       (C . t) ; enable processing C, C++, and D source blocks
+                   ;; (ipython . t)
 			       (julia . t)
+                   ;; (jupyter . t) ; if jupyter (jupyter-emacs) package is installed
 			       (js . t)
 			       (latex . t)
 			       (matlab . t)
@@ -889,6 +980,24 @@
     (add-to-list 'org-babel-load-languages '(scad . t))
     (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)))
 
+(use-package emacs
+  :custom (org-babel-python-command "python3"))
+
+(use-package yaml-mode
+  :ensure t
+  :defer t  ;; Opóźnione ładowanie o 2 sekundy
+)
+
+;; (use-package jupyter
+;; )
+
+(use-package ein
+  :config
+  (add-hook 'find-file-hook
+            (lambda ()
+              (when (eq major-mode 'ein:ipynb-mode)
+                (call-interactively #'ein:process-find-file-callback)))))
+
 ;; (use-package emacs
 (use-package org
  :init
@@ -899,8 +1008,9 @@
   ;;;; w przeciwnym wypadku beda i tak odczytywane angielskie swieta!!!
   (add-to-list 'load-path "~/projects/polish-holidays/")
   (require 'polish-holidays)
+  ;; (polish-holidays-set t)
+  (setq polish-holidays-use-all-p nil) ; set this variable to =t= if you want to add catholic holidays
   (polish-holidays-set)
-
 
 
   ;; Set your agenda files/directories (as a list of paths)
@@ -910,7 +1020,25 @@
   (setq mb/org-agenda-private-files '("~/.mysecrets/diary.org"))
   (setq mb/org-agenda-all-files  (append mb/org-agenda-public-files mb/org-agenda-private-files))
 
-  (setq org-agenda-files mb/org-agenda-public-files)
+  (setq org-agenda-files mb/org-agenda-all-files)
+
+  (defun search-org-agenda-files (phrase2search)
+     (interactive "sEnter the phrase to search: ")
+
+     ;; Przeszukuj wszystkie pliki 
+     (setq org-agenda-files mb/org-agenda-all-files)
+
+     (dolist (file (org-agenda-files t))
+       (with-temp-buffer
+        (insert-file-contents file)
+        (goto-char (point-min))
+         (while (re-search-forward "TODO" nil t)
+           (message "Found TODO in %s at pos %d" file (point)))))     
+
+
+     ;; wroc z powrotem do publicznych plikow
+     (setq org-agenda-files mb/org-agenda-public-files)
+  )
 
 
   ;; (setq diary-file mb/diary-file)
@@ -1104,7 +1232,7 @@ EOF")
     ; (cfw:ical-create-source "gcal" "https://..../basic.ics" "IndianRed") ; google calendar ICS
    )))
 
-  (global-set-key (kbd "C-c k") #'cfw:open-mb-calendar)  
+  (global-set-key (kbd "C-c c") #'cfw:open-mb-calendar)  
 )
 
 (use-package calfw-cal
@@ -1171,12 +1299,21 @@ EOF")
   (interactive)
   ;; (shell-command "dolphin .")  
   ;; (shell-command "thunar . &")  ; to uruchamia w shell-async!
-   (async-shell-command "thunar &")
-  ;; (start-process "my-browse" nil "setsid" "thunar")
+  ;;  (async-shell-command "thunar &")
+  (start-process "browse-started-from-within-Emacs" nil "thunar")
   )
 
   (define-key global-map (kbd "<s-f12>") 'mb/browse-file-directory)
 
+  
+  (defun mb/open-bash-here()
+  (interactive)
+  (shell-command "konsole &")
+  ;; (start-process "my-bash" nil "setsid" "konsole") 
+  )
+  
+  (define-key global-map (kbd "<s-f11>") 'mb/open-bash-here)
+  
   ; Backspace/Insert remapping
   (global-set-key (kbd "C-d") 'delete-forward-char)
   (global-set-key (kbd "C-S-d") 'delete-backward-char)
@@ -1208,6 +1345,265 @@ EOF")
     (use-package rainbow-delimiters
       :hook (prog-mode . rainbow-delimiters-mode))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; *** Blogging
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package emacs
+  :config
+
+   (defun cissic-blog-stencil  (title )
+  "Create and open a file with the given stencil."
+  (interactive "sEnter the title: ")
+  (let* ((date (format-time-string "%Y-%m-%d"))
+	 (dateDay (format-time-string "%Y-%m-%d %a"))
+	 (titleUnspaced (replace-regexp-in-string " " "-" title))
+	 (file-name (concat date "-" (downcase titleUnspaced) ".org"))
+	 (file-path (concat "~/projects/cissic.github.io/mysource/public-notes-org/" file-name))
+
+	 (stencil (concat "#+TITLE: " title "\n"
+			  "#+DESCRIPTION: \n"
+			  "#+AUTHOR: cissic \n"
+			  "#+DATE: <" dateDay ">\n"
+			  "#+TAGS: \n"
+			  "#+OPTIONS: -:nil\n"
+			  "\n"
+			  "* TODO " title "\n"
+			  ":PROPERTIES:\n"
+			  ":PRJ-DIR: ./" date "-" (car (split-string titleUnspaced)) "/\n"
+			  ":END:\n"
+			  "\n"
+			  "** Problem description\n"
+			  "#+begin_src org :tangle (concat (org-entry-get nil \"PRJ-DIR\" t) \"script.org\") :mkdirp yes :exports none :results none\n"
+			  "\n"
+			  "#+end_src\n"
+			  ))) 
+    (with-temp-file file-path
+      (insert stencil))
+    (find-file file-path)
+     (goto-char (point-max))
+     ))
+
+
+
+
+  (defun mb/org-entry-stencil  (title )
+   "Create and open a file with the given stencil."
+   (interactive "sEnter the title: ")
+   (let* ((date (format-time-string "%Y.%m.%d"))
+	  (dateDay (format-time-string "%Y-%m-%d %a"))
+	  (titleUnspaced (replace-regexp-in-string " " "-" title))
+          (dir-name  (concat date "-" (downcase titleUnspaced) ))
+	  (file-name (concat date "-" (downcase titleUnspaced) ".org"))
+	  (dir-path (concat "~/org/" dir-name ))
+	  (file-path (concat "~/org/" dir-name "/" file-name))
+
+	  (stencil (concat "#+TITLE: " title "\n"
+			   "#+DESCRIPTION: \n"
+			   "#+AUTHOR: \n"
+			   "#+DATE: <" dateDay ">\n"
+			   "#+TAGS: \n"
+			   "#+OPTIONS: -:nil\n"
+			   "\n"
+			  "* TODO " title "\n"
+			  ":PROPERTIES:\n"
+			  ":PRJ-DIR: ./src"  "/\n"
+			  ":END:\n"
+			  "\n"
+			  "** Opis problemu \n"
+			  "#+begin_src org :tangle (concat (org-entry-get nil \"PRJ-DIR\" t) \"script.org\") :mkdirp yes :exports none :results none\n"
+			  "\n"
+			  "#+end_src\n"
+			   )))
+     
+     (make-directory dir-path)
+     (with-temp-file file-path
+       (insert stencil))
+     (find-file file-path)
+     (goto-char (point-max))
+     ))
+
+
+  
+  ;; (defun mb/orgpriv-entry-stencil  (title )
+  ;;  "Create and open a file with the given stencil."
+  ;;  (interactive "sEnter the title: ")
+  ;;  (let* ((date (format-time-string "%Y.%m.%d"))
+  ;;     (dateDay (format-time-string "%Y-%m-%d %a"))
+  ;;     (titleUnspaced (replace-regexp-in-string " " "-" title))
+  ;;     (file-name (concat date "-" (downcase titleUnspaced) ".org"))
+  ;;     (file-path (concat "~/orgpriv/" file-name))
+  ;; 
+  ;;     (stencil (concat "#+TITLE: " title "\n"
+  ;;   		   "#+DESCRIPTION: \n"
+  ;;   		   "#+AUTHOR: \n"
+  ;;   		   "#+DATE: <" dateDay ">\n"
+  ;;   		   "#+TAGS: \n"
+  ;;   		   "#+OPTIONS: -:nil\n"
+  ;;   		   "\n"
+  ;;   		   ))) 
+  ;;    (with-temp-file file-path
+  ;;      (insert stencil))
+  ;;    (find-file file-path)
+  ;;    (goto-char (point-max))
+  ;;    ))
+
+  (defun mb/orgpriv-entry-stencil  (title )
+   "Create and open a file with the given stencil."
+   (interactive "sEnter the title: ")
+   (let* ((date (format-time-string "%Y.%m.%d"))
+	  (dateDay (format-time-string "%Y-%m-%d %a"))
+	  (titleUnspaced (replace-regexp-in-string " " "-" title))
+          (dir-name  (concat date "-" (downcase titleUnspaced) ))
+	  (file-name (concat date "-" (downcase titleUnspaced) ".org"))
+	  (dir-path (concat "~/orgpriv/" dir-name ))
+	  (file-path (concat "~/orgpriv/" dir-name "/" file-name))
+
+	  (stencil (concat "#+TITLE: " title "\n"
+			   "#+DESCRIPTION: \n"
+			   "#+AUTHOR: \n"
+			   "#+DATE: <" dateDay ">\n"
+			   "#+TAGS: \n"
+			   "#+OPTIONS: -:nil\n"
+			   "\n"
+			  "* TODO " title "\n"
+			  ":PROPERTIES:\n"
+			  ":PRJ-DIR: ./src"  "/\n"
+			  ":END:\n"
+			  "\n"
+			  "** Opis problemu \n"
+			  "#+begin_src org :tangle (concat (org-entry-get nil \"PRJ-DIR\" t) \"script.org\") :mkdirp yes :exports none :results none\n"
+			  "\n"
+			  "#+end_src\n"
+			   )))
+     
+     (make-directory dir-path)
+     (with-temp-file file-path
+       (insert stencil))
+     (find-file file-path)
+     (goto-char (point-max))
+     ))
+  
+
+
+  (defun mb/rditit-entry-stencil  (title )
+   "Create and open a file with the given stencil."
+   (interactive "sEnter the title: ")
+   (let* ((date (format-time-string "%Y.%m.%d"))
+	  (dateDay (format-time-string "%Y-%m-%d %a"))
+	  (titleUnspaced (replace-regexp-in-string " " "-" title))
+	  (file-name (concat date "-" (downcase titleUnspaced) ".org"))
+	  (file-path (concat "~/org/RDITiT/pisma,maile-org/" file-name))
+
+	  (stencil (concat "#+TITLE: " title "\n"
+			   "#+DESCRIPTION: \n"
+			   "#+AUTHOR: \n"
+			   "#+DATE: <" dateDay ">\n"
+			   "#+TAGS: \n"
+			   "#+OPTIONS: -:nil\n"
+			   "\n"
+			   ))) 
+     (with-temp-file file-path
+       (insert stencil))
+     (find-file file-path)
+     (goto-char (point-max))
+     ))
+  )
+
+
+
+
+ (defun pp/blog-stencil  (title )
+  "Create and open a file with the given stencil."
+  (interactive "sEnter the title: ")
+  
+  (load-file (concat user-emacs-directory "../.mysecrets/blog_path.el"))
+  
+  (let* ((date (format-time-string "%Y-%m-%d"))
+   	 (dateDay (format-time-string "%Y-%m-%d %a"))
+   	 (titleUnspaced (replace-regexp-in-string " " "-" title))
+   	 (file-name (concat date "-" (downcase titleUnspaced) ".org"))
+   	 (file-path (concat pp/blog-path file-name))
+	 (stencil (concat ; "#+TITLE: " title "\n"
+			  "# #+OPTIONS: toc:nil \n"
+			  "# ## global settings: \n"
+			  "#+SETUPFILE: ../SETUPFILEORG \n"
+			  "# ## per directory settings:\n"
+			  "# ## - reload path to css files\n"
+			  "#+SETUPFILE: ./SETUPFILEORG\n"
+			  "#+SUBTITLE: Blog: " title "\n"
+			  "# * (Coś w rodzaju) menu :ignore:\n"
+			  "#+INCLUDE: ../menu.org\n"
+			  "# ###################################################################\n"
+
+			  "#+DATE: <" dateDay ">\n"
+			  "#+TAGS: \n"
+			  "\n"
+			  "* TODO " title "\n"
+			  ":PROPERTIES:\n"
+			  ":PRJ-DIR: ./" date "-" (car (split-string titleUnspaced)) "/\n"
+			  ":END:\n"
+			  "\n"
+			  "** Problem description\n"
+			  "#+begin_src org :tangle (concat (org-entry-get nil \"PRJ-DIR\" t) \"script.org\") :mkdirp yes :exports none :results none\n"
+			  "\n"
+			  "#+end_src\n"
+			  )))
+    
+     
+     ; open blog buffer
+     (find-file (concat pp/blog-path "index.org") )
+     ; znajdz sekcje z postami
+     (org-link-search "Posty")
+     ; przejdz do linii poniżej
+     ;;;; (next-line)
+     (org-end-of-line)
+     (org-return)
+     ; insert link to the blog entry
+     (insert (concat "** TODO [[file:./" file-name "][" date ": " title "]]" ) )
+
+     (with-temp-file file-path
+       (insert stencil))
+     (find-file file-path)
+      (goto-char (point-max))
+  )
+  )
+
+ (defun pp/blog-activation  ()
+  "Create and open a file with the given stencil."
+  (interactive)
+  (load-file (concat "~/.mysecrets/blog_path.el")) ; load variable pp/blog-path
+  ; open blog buffer
+  (find-file (concat pp/blog-path "index.org") )
+  
+  )
+
+    (use-package harpoon
+      :defer t
+      
+      :bind
+      ;; On vanilla (You can use another prefix instead C-c h)
+      
+      ;; You can use this hydra menu that have all the commands
+      (
+       ("C-c u" . harpoon-quick-menu-hydra)
+       ("C-c o <return>" . harpoon-add-file)
+       ;; And the vanilla commands
+       ( "C-c o f" . harpoon-toggle-file)
+       ( "C-c o h" . harpoon-toggle-quick-menu)
+       ( "C-c o c" . harpoon-clear)
+       ( "C-c o 1" . harpoon-go-to-1)
+       ( "C-c o 2" . harpoon-go-to-2)
+       ( "C-c o 3" . harpoon-go-to-3)
+       ( "C-c o 4" . harpoon-go-to-4)
+       ( "C-c o 5" . harpoon-go-to-5)
+       ( "C-c o 6" . harpoon-go-to-6)
+       ( "C-c o 7" . harpoon-go-to-7)
+       ( "C-c o 8" . harpoon-go-to-8)
+       ( "C-c o 9" . harpoon-go-to-9)
+      )
+      )
+
 (use-package octave
   :defer t
   :config
@@ -1236,6 +1632,23 @@ EOF")
   ; (setq org-babel-default-header-args:matlab
   ; '())  
   )
+
+(use-package pyvenv
+  :ensure t
+  :config
+  (pyvenv-mode t)
+
+  (pyvenv-workon (concat user-emacs-directory ".emacs-venv/bin/python3"))
+
+  
+  ;; Set correct Python interpreter
+  (setq pyvenv-post-activate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter (concat pyvenv-virtual-env "bin/python3")))))
+  (setq pyvenv-post-deactivate-hooks
+        (list (lambda ()
+                (setq python-shell-interpreter "python3"))))
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Block of custom auxiliary code for managing filtering of
@@ -1281,3 +1694,47 @@ EOF")
 
   ;; All done
   (message "All done in post-init.el.")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; *** Auxiliary functions for layout management
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+(use-package emacs
+  :config
+
+  (defun toggle-window-split ()
+    "Toggle horizontal/vertical split of two windows"
+    (interactive)
+    (if (= (count-windows) 2)
+        (let* ((this-win-buffer (window-buffer))
+               (next-win-buffer (window-buffer (next-window)))
+               (this-win-edges (window-edges (selected-window)))
+               (next-win-edges (window-edges (next-window)))
+               (this-win-2nd (not (and (<= (car this-win-edges)
+                                           (car next-win-edges))
+                                       (<= (cadr this-win-edges)
+                                           (cadr next-win-edges)))))
+               (splitter
+                (if (= (car this-win-edges)
+                       (car (window-edges (next-window))))
+                    'split-window-horizontally
+                  'split-window-vertically)))
+          (delete-other-windows)
+          (let ((first-win (selected-window)))
+            (funcall splitter)
+            (if this-win-2nd (other-window 1))
+            (set-window-buffer (selected-window) this-win-buffer)
+            (set-window-buffer (next-window) next-win-buffer)
+            (select-window first-win)
+            (if this-win-2nd (other-window 1))))))
+
+;; (global-set-key (kbd "C-x |") 'toggle-window-split)
+
+  (defun transpose-windows ()
+    "Toggle horizontal/vertical split of two windows"
+    (interactive)
+    (toggle-window-split))
+
+)

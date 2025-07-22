@@ -48,17 +48,17 @@
   ;; Recently opened files ->
   ;; (recentf-mode 1)
   (add-hook 'after-init-hook #'(lambda()
-                               (let ((inhibit-message t))
-                                 (recentf-mode 1))))  
+                                 (let ((inhibit-message t))
+                                   (recentf-mode 1))))  
   (setq recentf-max-menu-items 1000)
   (setq recentf-max-saved-items 1000)
   ;; in original emacs this binding is for "Find file read-only"
   (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-   (add-hook 'kill-emacs-hook #'recentf-cleanup)  
+  (add-hook 'kill-emacs-hook #'recentf-cleanup)  
   
   ;; <- Recently opened files
-)
+  )
 ;;;;;;;   <---- recentf - konfiguruję później
 
 
@@ -99,48 +99,22 @@
   (defadvice kill-ring-save (after keep-transient-mark-active ())
    "Override the deactivation of the mark."
     (setq deactivate-mark nil))
-  (ad-activate 'kill-ring-save)
+  (ad-activate 'kill-ring-save) 
   ;; <- Do not deselect after M-w copying
 )
 
-(use-package emacs
- :config
-;; Ścieżka do pliku logów
-(defvar my-message-log-file "~/.emacs.d/message-log.txt"
-  "File to log all messages from `message' function.")
-
-;; Przechowujemy oryginalną funkcję 'message' tylko raz
-(defvar my/original-message (symbol-function 'message)
-  "The original `message` function before overriding.")
-
-;; Nadpisujemy 'message', aby logował również do pliku
-(defun my/log-message-to-file (format-string &rest args)
-  "Log messages to a file and echo area."
-  (let ((message-text (apply 'format format-string args)))
-    (with-temp-buffer
-      (insert (format-time-string "[%Y-%m-%d %H:%M:%S] "))
-      (insert message-text "\n")
-      (append-to-file (point-min) (point-max) my-message-log-file))
-    (apply my/original-message format-string args)))
-
-;; Zastąp 'message' naszą funkcją
-(fset 'message #'my/log-message-to-file)
-
-;; Funkcja do kopiowania ostatniego komunikatu
-(defun copy-last-message-to-kill-ring ()
-  "Copy the last message from the echo area to the kill ring."
+(defun mb/copy-emacs-and-org-version ()
+  "Copy Emacs and Org-mode version info to kill ring."
   (interactive)
-  (let ((msg (current-message)))
-    (if msg
-        (progn
-          (kill-new msg)
-          (message "Copied to kill-ring: %s" msg))
-      (message "No message to copy."))))
-
-;; Opcjonalnie: skrót klawiszowy
-;; (global-set-key (kbd "C-c m") #'copy-last-message-to-kill-ring)
-
-)
+  (let* ((emacs-ver (format "%s" emacs-version))
+         (org-ver (if (featurep 'org)
+                      (org-version)
+                    "Org not loaded"))
+         (msg (format "Emacs %s, Org-mode %s"
+                      emacs-ver org-ver)))
+    (kill-new msg)
+    ;; (message "Copied to kill %s" msg)))
+    (message "%s" msg)))
 
 ;; Enable `auto-save-mode' to prevent data loss. Use `recover-file' or
 ;; `recover-session' to restore unsaved changes.
@@ -797,6 +771,120 @@
   ;; )
 )
 
+(use-package latex
+  :ensure auctex
+  :hook ((LaTeX-mode . prettify-symbols-mode))
+  :bind (:map LaTeX-mode-map
+         ("C-S-e" . latex-math-from-calc))
+  :config
+  ;; Format math as a Latex string with Calc
+  (defun latex-math-from-calc ()
+    "Evaluate `calc' on the contents of line at point."
+    (interactive)
+    (cond ((region-active-p)
+           (let* ((beg (region-beginning))
+                  (end (region-end))
+                  (string (buffer-substring-no-properties beg end)))
+             (kill-region beg end)
+             (insert (calc-eval `(,string calc-language latex
+                                          calc-prefer-frac t
+                                          calc-angle-mode rad)))))
+          (t (let ((l (thing-at-point 'line)))
+               (end-of-line 1) (kill-line 0) 
+               (insert (calc-eval `(,l
+                                    calc-language latex
+                                    calc-prefer-frac t
+                                    calc-angle-mode rad))))))))
+
+;; CDLatex settings
+(use-package cdlatex
+  :ensure t
+  :hook (LaTeX-mode . turn-on-cdlatex)
+  :bind (:map cdlatex-mode-map 
+              ("<tab>" . cdlatex-tab)))
+
+;; Yasnippet settings
+(use-package yasnippet
+  :ensure t
+  :hook ((LaTeX-mode . yas-minor-mode)
+         (post-self-insert . my/yas-try-expanding-auto-snippets))
+  :config
+  (use-package warnings
+    :config
+    (cl-pushnew '(yasnippet backquote-change)
+                warning-suppress-types
+                :test 'equal))
+
+  (setq yas-triggers-in-field t)
+  
+  ;; Function that tries to autoexpand YaSnippets
+  ;; The double quoting is NOT a typo!
+  (defun my/yas-try-expanding-auto-snippets ()
+    (when (and (boundp 'yas-minor-mode) yas-minor-mode)
+      (let ((yas-buffer-local-condition ''(require-snippet-condition . auto)))
+        (yas-expand)))))
+
+;; CDLatex integration with YaSnippet: Allow cdlatex tab to work inside Yas
+;; fields
+(use-package cdlatex
+  :hook ((cdlatex-tab . yas-expand)
+         (cdlatex-tab . cdlatex-in-yas-field))
+  :config
+  (use-package yasnippet
+    :bind (:map yas-keymap
+           ("<tab>" . yas-next-field-or-cdlatex)
+           ("TAB" . yas-next-field-or-cdlatex))
+    :config
+    (defun cdlatex-in-yas-field ()
+      ;; Check if we're at the end of the Yas field
+      (when-let* ((_ (overlayp yas--active-field-overlay))
+                  (end (overlay-end yas--active-field-overlay)))
+        (if (>= (point) end)
+            ;; Call yas-next-field if cdlatex can't expand here
+            (let ((s (thing-at-point 'sexp)))
+              (unless (and s (assoc (substring-no-properties s)
+                                    cdlatex-command-alist-comb))
+                (yas-next-field-or-maybe-expand)
+                t))
+          ;; otherwise expand and jump to the correct location
+          (let (cdlatex-tab-hook minp)
+            (setq minp
+                  (min (save-excursion (cdlatex-tab)
+                                       (point))
+                       (overlay-end yas--active-field-overlay)))
+            (goto-char minp) t))))
+
+    (defun yas-next-field-or-cdlatex nil
+      (interactive)
+      "Jump to the next Yas field correctly with cdlatex active."
+      (if
+          (or (bound-and-true-p cdlatex-mode)
+              (bound-and-true-p org-cdlatex-mode))
+          (cdlatex-tab)
+        (yas-next-field-or-maybe-expand)))))
+
+(use-package pdf-tools
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-tools-modes)
+  :custom
+  (pdf-view-display-size 'fit-width)
+  (pdf-annot-activate-created-annotations t)
+  :config
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  (define-key pdf-view-mode-map (kbd "C-r") 'isearch-backward)
+
+  (add-hook 'pdf-view-mode-hook (lambda() (linum-mode -1) ; disable linum-mode
+				(midnight-mode 1) ; enable midnight-mode
+				))
+  )
+
+(use-package pdf-tools
+  :config
+  (add-hook 'pdf-view-mode-hook (lambda() (linum-mode -1) ; disable linum-mode
+				(midnight-mode 1) ; enable midnight-mode
+				))
+  )
+
 ;; toc-org for table of contents in org-mode
 (use-package org
   :pin gnu
@@ -1065,6 +1153,13 @@
         )
 
   (global-set-key (kbd "C-c a") #'org-agenda)
+
+  (defun find-agenda-org ()
+    (interactive)  ;; musi byc interactive zeby dalo sie wywolac skrotem klawiaturowym
+    (find-file  "~/org/agenda/agenda.org" )
+    )
+
+  (global-set-key (kbd "C-x 2") #'find-agenda-org)
   
 )
 
@@ -1261,10 +1356,13 @@ EOF")
   ;; Enable plantuml-mode for PlantUML files
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 
-  ;; enable working with executable plantuml (not jar)
+  ;;;; enable working with executable plantuml (not jar)
+  ;; (setq plantuml-executable-path "plantuml")
+  ;; (setq org-plantuml-exec-mode 'plantuml)
+
   (setq plantuml-executable-path "plantuml")
-  (setq org-plantuml-exec-mode 'plantuml)
-  
+  (setq plantuml-default-exec-mode 'executable)
+
   :config
   ;; Integration with org-mode
   (add-to-list  'org-src-lang-modes '("plantuml" . plantuml))
@@ -1633,6 +1731,13 @@ EOF")
   ; '())  
   )
 
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-do)))
+
 (use-package pyvenv
   :ensure t
   :config
@@ -1679,6 +1784,48 @@ EOF")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package emacs
+  :config
+
+  (defun save-and-commit-file (filepath commit-message)
+    "Zapisuje zmiany w FILEPATH i wykonuje git commit z COMMIT-MESSAGE."
+    (interactive
+     (list
+      (read-file-name "Wybierz plik do zapisania i commitowania: ")
+      (read-string "Commit message: ")))
+    (let ((buffer (find-buffer-visiting filepath)))
+      ;; Jeśli plik jest otwarty w buforze — zapisz go
+      (when buffer
+        (with-current-buffer buffer
+          (when (buffer-modified-p)
+            (save-buffer))))
+      ;; Wykonaj git add i commit
+      (let ((default-directory (locate-dominating-file filepath ".git")))
+        (unless default-directory
+          (error "Nie znaleziono repozytorium Git dla pliku %s" filepath))
+        (let ((relpath (file-relative-name filepath default-directory)))
+          (shell-command (format "git add %s" (shell-quote-argument relpath)))
+          (shell-command (format "git commit -m %s"
+                                 (shell-quote-argument commit-message)))
+          ;; (message "Commit wykonany dla: %s" relpath)
+          ))))
+
+
+  (defun mb/commit-config-changes ()
+    (interactive)
+    ;; (let ((default-directory "test")) ; run command `git commmit` in the context of my-emacs-dir
+    ;;  (shell-command
+    ;;    "git commit -m 'Precautionary commit before running install-packages.el'")
+    ;;  )
+    
+    (save-and-commit-file
+     "~/org/2025.03.20-konfiguracja-emacsa-od-podstaw---podejście-drugie/2025.03.20-konfiguracja-emacsa-od-podstaw---podejście-drugie.org"
+     "Precautionary commit after config modifications"))
+  
+  ;; (global-set-key (kbd "C-c ") #'commit-config-changes)
+
+)
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Kod tymczasowy

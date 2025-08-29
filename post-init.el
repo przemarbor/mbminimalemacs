@@ -48,17 +48,17 @@
   ;; Recently opened files ->
   ;; (recentf-mode 1)
   (add-hook 'after-init-hook #'(lambda()
-                                 (let ((inhibit-message t))
-                                   (recentf-mode 1))))  
+                               (let ((inhibit-message t))
+                                 (recentf-mode 1))))  
   (setq recentf-max-menu-items 1000)
   (setq recentf-max-saved-items 1000)
   ;; in original emacs this binding is for "Find file read-only"
   (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 
-  (add-hook 'kill-emacs-hook #'recentf-cleanup)  
+   (add-hook 'kill-emacs-hook #'recentf-cleanup)  
   
   ;; <- Recently opened files
-  )
+)
 ;;;;;;;   <---- recentf - konfiguruję później
 
 
@@ -1361,7 +1361,9 @@ EOF")
   ;; (setq org-plantuml-exec-mode 'plantuml)
 
   (setq plantuml-executable-path "plantuml")
-  (setq plantuml-default-exec-mode 'executable)
+  (setq plantuml-default-exec-mode 'executable) ; not 'plantuml!
+
+  (setq org-plantuml-exec-mode 'plantuml) ; not 'executable!
 
   :config
   ;; Integration with org-mode
@@ -1735,8 +1737,13 @@ EOF")
   :ensure t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown")
+        (require 'ox-md nil t)    ;; export to markdown in export menu (C-c C-e)
   :bind (:map markdown-mode-map
          ("C-c C-e" . markdown-do)))
+
+(use-package ox-gfm :defer 3 :after org)
+
+;; TODO
 
 (use-package pyvenv
   :ensure t
@@ -1845,8 +1852,6 @@ EOF")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; *** Auxiliary functions for layout management
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 (use-package emacs
   :config

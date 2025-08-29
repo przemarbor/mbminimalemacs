@@ -3,6 +3,7 @@ backup/
 eln-cache/
 easysession/
 undo-fu-session/
+elpa/
 
 history
 recentf

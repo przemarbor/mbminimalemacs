@@ -672,6 +672,12 @@
   (global-display-fill-column-indicator-mode t)
 )
 
+(use-package emacs
+  :init 
+  (define-prefix-command 'mb-map)
+  (global-set-key (kbd "C-z") 'mb-map)  
+)
+
 (use-package smart-shift
   :ensure t ; builtin
   :defer t
@@ -1074,6 +1080,24 @@
 (use-package yaml-mode
   :ensure t
   :defer t  ;; Opóźnione ładowanie o 2 sekundy
+)
+
+(use-package org
+  :defer t
+  :mode (("\\.org$" . org-mode))
+  :config
+
+  (defun org-comment-line-with-inline ()
+    "Add '@@comment:' at the beginning of the line, and '@@' at its end."
+    (interactive)
+    (save-excursion
+      (beginning-of-line)
+      (insert "@@comment: ")
+      (end-of-line)
+      (insert "@@")))
+
+  (add-hook 'org-mode-hook #'org-comment-line-with-inline)
+  (define-key mb-map (kbd "C-;") 'org-comment-line-with-inline)
 )
 
 ;; (use-package jupyter
@@ -1742,6 +1766,11 @@ EOF")
          ("C-c C-e" . markdown-do)))
 
 (use-package ox-gfm :defer 3 :after org)
+
+(use-package dockerfile-mode
+  :defer t
+  :mode "Dockerfile\\'"
+  :ensure t)
 
 ;; TODO
 

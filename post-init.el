@@ -386,8 +386,8 @@
              undo-fu-only-redo-all
              undo-fu-disable-checkpoint)
   :config
-  (global-unset-key (kbd "C-z"))
-  (global-set-key (kbd "C-z") 'undo-fu-only-undo)
+  ; (global-unset-key (kbd "C-z"))    ; C-z is reserved for my own keymap
+  ; (global-set-key (kbd "C-z") 'undo-fu-only-undo) ; C-z is reserved for my own keymap
   (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
 
 ;; The undo-fu-session package complements undo-fu by enabling the saving
@@ -396,14 +396,6 @@
   :defer t
   :commands undo-fu-session-global-mode
   :hook (after-init . undo-fu-session-global-mode))
-
-(use-package eglot
-  :ensure nil
-  :defer t
-  :commands (eglot
-             eglot-ensure
-             eglot-rename
-             eglot-format-buffer))
 
 (use-package easysession
   :ensure t
@@ -675,8 +667,12 @@
 (use-package emacs
   :init 
   (define-prefix-command 'mb-map)
+  (global-unset-key (kbd "C-z"))
   (global-set-key (kbd "C-z") 'mb-map)  
 )
+
+(use-package wgrep
+  :ensure t)
 
 (use-package smart-shift
   :ensure t ; builtin
@@ -690,17 +686,55 @@
    ;; C-x TAB:    left/right
 )
 
+(use-package emacs
+  :init 
+
+  (defun capitalize-region-as-a-sentence (beg end)
+    "In the region, convert all letters to lowercase,
+exceptions the first letter of the first word, which will be uppercase."
+    (interactive "r")
+    (let ((text (buffer-substring-no-properties beg end)))
+      ;; first, convert everything to lowercase
+      (setq text (downcase text))
+      ;; then, replace the first letter with uppercase
+      (setq text (concat (capitalize (substring text 0 1))
+                         (substring text 1)))
+      ;; insert the modified text back into the buffer
+      (delete-region beg end)
+      (insert text)))
+)
+
+(use-package emacs
+  :init 
+
+(defun goto-last-non-whitespace-in-line ()
+  "Move point to the last non-whitespace character in the current line."
+  (interactive)
+  (end-of-line)
+  (skip-chars-backward " \t"))
+
+(defun goto-first-non-whitespace-in-line ()
+  "Move point to the first non-whitespace character in the current line."
+  (interactive)
+  (beginning-of-line)
+  (skip-chars-forward " \t"))
+
+(defun goto-last-non-whitespace-from-cursor ()
+  "Move point to the last non-whitespace character on the left."
+  (interactive)  
+  (skip-chars-backward " \t"))
+)
+
 ;; windmove ->
 ;; Easy moving between windows
-  
+
 (use-package windmove
   :defer t
-  :bind
-  (("M-s-<left>"  . windmove-left)
-   ("M-s-<right>" . windmove-right)
-   ("M-s-<up>"    . windmove-up)
-   ("M-s-<down>"  . windmove-down)   
-  ) 
+  :bind (:map mb-map
+          ("<left>"  . windmove-left)
+          ("<right>" . windmove-right)
+          ("<up>"    . windmove-up)
+          ("<down>"  . windmove-down))
 )
 
 ;; buffer-move - swap buffers easily
@@ -1095,9 +1129,16 @@
       (insert "@@comment: ")
       (end-of-line)
       (insert "@@")))
+  
+  (define-key mb-map (kbd "C-;") 'org-comment-line-with-inline)  
+)
 
-  (add-hook 'org-mode-hook #'org-comment-line-with-inline)
-  (define-key mb-map (kbd "C-;") 'org-comment-line-with-inline)
+(use-package org
+ :config
+  (defun org-subtree-make-list ()
+  (interactive)
+  (org-mark-subtree)
+  (org-ctrl-c-minus))
 )
 
 ;; (use-package jupyter
@@ -1183,8 +1224,8 @@
     (find-file  "~/org/agenda/agenda.org" )
     )
 
-  (global-set-key (kbd "C-x 2") #'find-agenda-org)
-  
+  ;; (global-set-key (kbd "C-x 2") #'find-agenda-org)
+  (define-key mb-map (kbd "a") #'find-agenda-org) ; C-z a to call agenda file
 )
 
 ;; (use-package emacs
@@ -1420,11 +1461,16 @@ EOF")
 (use-package emacs
   :init 
   (defun mb/browse-file-directory()
+  "Opens system's default file browser in the directory of the current buffer file. "
   (interactive)
-  ;; (shell-command "dolphin .")  
+  ; (shell-command "dolphin .")  ; 
   ;; (shell-command "thunar . &")  ; to uruchamia w shell-async!
   ;;  (async-shell-command "thunar &")
-  (start-process "browse-started-from-within-Emacs" nil "thunar")
+  ;; (start-process "browse-started-from-within-Emacs" nil "thunar")
+  ;; (start-process "browse-started-from-within-Emacs" nil "dolphin")
+  
+  ; (async-shell-command "dolphin . &")
+  (start-process "browse-started-from-within-Emacs" nil "dolphin" ".")
   )
 
   (define-key global-map (kbd "<s-f12>") 'mb/browse-file-directory)
